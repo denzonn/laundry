@@ -147,7 +147,6 @@
         const avatarColor = (name) => ['bg-rose-100 text-rose-600', 'bg-sky-100 text-sky-600', 'bg-emerald-100 text-emerald-600',
             'bg-amber-100 text-amber-600', 'bg-violet-100 text-violet-600'][name.length % 5];
         const initials = (name) => name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-        const esc = (s) => $('<div>').text(s ?? '').html();
 
         function cardSkeleton() {
             return `<div class="animate-pulse rounded-2xl border border-slate-200 bg-white p-5">
@@ -185,7 +184,7 @@
 
                 <div class="mt-4 space-y-1.5 text-sm text-slate-500">
                     <p class="truncate"><i class="fa-regular fa-envelope w-5"></i> ${esc(u.email)}</p>
-                    <p><i class="fa-solid fa-phone w-5"></i> ${esc(u.no_hp) || '-'}</p>
+                    <p><i class="fa-solid fa-phone w-5"></i> ${esc(u.no_hp || '-')}</p>
                 </div>
 
                 <div class="mt-4 flex gap-2 border-t border-slate-100 pt-4">
@@ -259,11 +258,7 @@
                     showToast(res.message);
                     loadData();
                 },
-                error(xhr) {
-                    App.loading.hide();
-                    if (xhr.status !== 422) return Swal.fire({ icon: 'error', title: 'Gagal', text: xhr.responseJSON?.message ?? 'Terjadi kesalahan.' });
-                    $.each(xhr.responseJSON.errors, (k, v) => $(`.err[data-for=${k}]`).text(v[0]));
-                },
+                error: (xhr) => formError(xhr, this),
             });
         });
 

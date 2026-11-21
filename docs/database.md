@@ -26,7 +26,7 @@ nama_toko, alamat, no_hp, logo, footer_struk, ukuran_struk (`58`/`80`), template
 | aktif | boolean | |
 
 ## pelanggan (Fase 2)
-nama, no_hp (unique), alamat null, catatan null
+nama, no_hp (unique, dinormalisasi `62xxx` oleh mutator `Pelanggan::setNoHpAttribute`), alamat null, catatan null
 
 ## parfum (Fase 2)
 nama, aktif

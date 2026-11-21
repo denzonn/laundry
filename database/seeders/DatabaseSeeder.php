@@ -14,5 +14,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create(['name' => 'Kasir Laundry', 'email' => 'kasir@laundry.test']);
 
         Pengaturan::toko();
+
+        $this->call(MasterSeeder::class);
     }
 }

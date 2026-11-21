@@ -40,10 +40,12 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 ## Fase 2 — Master Data
 
-- [ ] **Layanan**: nama, kategori (kiloan/satuan), satuan (kg/pcs/m²), harga, estimasi durasi (jam), aktif
-- [ ] **Pelanggan**: nama, no HP (unik), alamat, catatan; cari cepat by nama/HP
-- [ ] **Parfum** (opsional, daftar pilihan saat order)
-- [ ] **Metode Pembayaran**: Tunai, Transfer, QRIS (seeder, bisa ditambah)
+- [x] **Layanan**: nama, kategori (kiloan/satuan), satuan (kg/pcs/m²), harga, estimasi durasi (jam), aktif
+- [x] **Pelanggan**: nama, no HP (unik), alamat, catatan; cari cepat by nama/HP
+- [x] **Parfum** (opsional, daftar pilihan saat order)
+- [x] **Metode Pembayaran**: Tunai, Transfer, QRIS (seeder, bisa ditambah), minimal 1 aktif
+- [x] No HP pelanggan dinormalisasi ke format `62xxx` (siap wa.me, unik konsisten)
+- [x] Seeder contoh layanan & parfum (`MasterSeeder`)
 
 **Selesai bila**: semua master bisa CRUD di HP tanpa scroll horizontal.
 
@@ -63,6 +65,8 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 - [ ] Tambah pembayaran (pelunasan) → status bayar otomatis
 - [ ] Batalkan order (owner only, wajib alasan)
 - [ ] Test: hitung total, DP/pelunasan, transisi status ilegal ditolak
+- [ ] Cegah hapus layanan/pelanggan/parfum/metode yang sudah dipakai order (FK `restrictOnDelete` → pesan "nonaktifkan saja")
+- [ ] Detail pelanggan: tampilkan riwayat order (placeholder sudah ada di panel detail)
 
 **Selesai bila**: satu order bisa dibuat → diproses → diambil → lunas, dari HP.
 

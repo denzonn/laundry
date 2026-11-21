@@ -43,6 +43,9 @@ Helper JS global (di [resources/js/](resources/js/), dipakai, jangan dibuat ulan
 | `initSelect2()` / `initDateRangePicker(...)` | select & date range |
 | `showModal(id)` / `closeModal(id)` | modal (`.modal-overlay` > `.modal-content`) |
 | `showToast(msg, type)` | toast |
+| `esc(str)` | escape HTML, **wajib** untuk data user yang dirender lewat template string |
+| `formatHp('62812...')` | tampil `0812-xxxx-xxx` |
+| `formError(xhr, form)` | error handler form AJAX: tutup loading, 422 → isi `<p class="err" data-for="field">` |
 | `formatRupiah`, `toNumber`, `getNominal`, `formatTanggal`, `formatTanggalIndo`, `formatTanggalJam`, `formatBadgeStatus` | format |
 | `App.loading.show()` / `App.submitLoading()` | loading overlay (di `includes/script.blade.php`) |
 
@@ -72,6 +75,9 @@ Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. 
 - Sebelum membuat halaman baru, cek halaman yang sudah ada supaya tidak mengulang layout yang sama.
 
 ## Konvensi
+
+- Layout `<main>` memakai `overflow-x-clip` (bukan `hidden`) agar `sticky` di dalam halaman tetap jalan.
+- Data kecil (layanan, parfum, metode) → endpoint `data` tanpa pagination; data besar (pelanggan, order) → `paginate()`.
 
 - Bahasa domain & UI: **Bahasa Indonesia** (nama tabel/kolom boleh Indonesia, konsisten dengan [docs/database.md](docs/database.md)).
 - Uang disimpan `unsignedBigInteger` (Rupiah bulat), berat `decimal(8,2)` kg.

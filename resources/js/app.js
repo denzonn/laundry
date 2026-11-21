@@ -436,3 +436,26 @@ window.formatBadgeStatus = function (status) {
 
     return `<span class="inline-block px-3 py-1 rounded-lg ${badgeClass} text-[11px] font-semibold">${label}</span>`;
 };
+
+window.esc = function (value) {
+    return String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+};
+
+// "628123456789" → "0812-3456-789"
+window.formatHp = function (hp) {
+    if (!hp) return "-";
+    const lokal = String(hp).replace(/^62/, "0");
+    return lokal.replace(/(\d{4})(\d{4})(\d+)/, "$1-$2-$3");
+};
+
+// Error handler standar form AJAX: tutup loading, 422 → isi <p class="err" data-for="field">, lainnya → alert.
+window.formError = function (xhr, form = document) {
+    App.loading.hide();
+    $(form).find(".err").text("");
+
+    if (xhr.status !== 422) {
+        return Swal.fire({ icon: "error", title: "Gagal", text: xhr.responseJSON?.message ?? "Terjadi kesalahan." });
+    }
+
+    $.each(xhr.responseJSON.errors, (field, msg) => $(form).find(`.err[data-for="${field}"]`).text(msg[0]));
+};
