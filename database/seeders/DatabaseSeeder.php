@@ -15,6 +15,6 @@ class DatabaseSeeder extends Seeder
 
         Pengaturan::toko();
 
-        $this->call([MasterSeeder::class, KategoriPengeluaranSeeder::class]);
+        $this->call([MasterSeeder::class, KategoriPengeluaranSeeder::class, BahanSeeder::class]);
     }
 }

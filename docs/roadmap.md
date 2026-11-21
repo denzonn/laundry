@@ -102,12 +102,12 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 ## Fase 7 — Lanjutan (dikerjakan bila dibutuhkan)
 
-- [ ] Multi cabang/outlet (`outlet_id` di order, user, pengeluaran)
-- [ ] Antar-jemput & kurir (role `kurir`, jadwal, status pickup/delivery)
-- [ ] Member / paket deposit / poin
-- [ ] Inventori bahan (stok deterjen, parfum, plastik)
-- [ ] WhatsApp API otomatis (Fonnte/Wablas, via queue)
-- [ ] PWA (install di HP, ikon home screen)
+- [ ] Multi cabang/outlet (`outlet_id` di order, user, pengeluaran) — menunggu keputusan owner
+- [ ] Antar-jemput & kurir (role `kurir`, jadwal, status pickup/delivery) — Fase 7b
+- [ ] Member / paket deposit / poin — Fase 7b
+- [x] Inventori bahan (stok deterjen, parfum, plastik) — halaman **Stok Bahan** (`bahan`, owner, grup Gudang): tabung stok vs minimum, Masuk / Pakai / Stok opname via `Bahan::mutasi()`, riwayat 30 terakhir, banner stok menipis di dashboard owner. Default di `BahanSeeder`. Belum terhubung otomatis ke order (pemakaian dicatat manual)
+- [x] WhatsApp API otomatis (Fonnte, via queue) — job `KirimWhatsapp` saat order masuk & siap diambil, default **mati** (`WA_AUTO_SEND`, `WA_FONNTE_TOKEN` di `.env`). Tombol wa.me manual tetap ada. Wablas belum
+- [x] PWA (install di HP, ikon home screen) — `public/manifest.webmanifest`, `public/sw.js`, `public/offline.html`, ikon di `public/icons/`
 
 ---
 
@@ -120,6 +120,7 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 | Master | Pelanggan | semua |
 | Master | Layanan, Parfum, Metode Bayar | owner |
 | Keuangan | Pengeluaran | owner (kasir input saja: opsional) |
+| Gudang | Stok Bahan | owner |
 | Laporan | Pendapatan, Order, Piutang, Laba Rugi | owner |
 | Pengaturan | Toko, User | owner |
 

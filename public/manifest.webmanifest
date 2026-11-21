@@ -1,0 +1,17 @@
+{
+    "name": "Laundry - Manajemen Laundry",
+    "short_name": "Laundry",
+    "description": "Kasir, order, dan laporan laundry dari HP.",
+    "lang": "id",
+    "start_url": "/dashboard",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait",
+    "theme_color": "#B91C1C",
+    "background_color": "#F8FAFC",
+    "icons": [
+        { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ]
+}

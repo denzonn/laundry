@@ -117,6 +117,14 @@
                             @error($field) <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
                         </div>
                     @endforeach
+
+                    @php $waAuto = \App\Jobs\KirimWhatsapp::aktif(); @endphp
+                    <p class="flex items-start gap-2 rounded-xl bg-slate-50 px-3 py-2.5 text-xs text-slate-500">
+                        <i class="fa-solid fa-robot mt-0.5 {{ $waAuto ? 'text-green-600' : 'text-slate-400' }}"></i>
+                        <span>Kirim otomatis:
+                            <b class="{{ $waAuto ? 'text-green-700' : 'text-slate-700' }}">{{ $waAuto ? 'Aktif' : 'Nonaktif' }}</b>
+                            (atur <code>WA_AUTO_SEND</code> &amp; <code>WA_FONNTE_TOKEN</code> di .env)</span>
+                    </p>
                 </div>
             </section>
         </div>

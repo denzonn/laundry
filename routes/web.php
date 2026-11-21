@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BahanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LacakController;
 use App\Http\Controllers\LaporanController;
@@ -88,6 +89,14 @@ Route::middleware('auth')->group(function () {
         Route::post('pengeluaran/kategori', [PengeluaranController::class, 'kategoriStore'])->name('pengeluaran.kategori.store');
         Route::put('pengeluaran/kategori/{kategori}', [PengeluaranController::class, 'kategoriUpdate'])->name('pengeluaran.kategori.update');
         Route::delete('pengeluaran/kategori/{kategori}', [PengeluaranController::class, 'kategoriDestroy'])->name('pengeluaran.kategori.destroy');
+
+        Route::get('bahan', [BahanController::class, 'index'])->name('bahan');
+        Route::get('bahan/data', [BahanController::class, 'data'])->name('bahan.data');
+        Route::post('bahan', [BahanController::class, 'store'])->name('bahan.store');
+        Route::put('bahan/{bahan}', [BahanController::class, 'update'])->name('bahan.update');
+        Route::delete('bahan/{bahan}', [BahanController::class, 'destroy'])->name('bahan.destroy');
+        Route::post('bahan/{bahan}/mutasi', [BahanController::class, 'mutasi'])->name('bahan.mutasi');
+        Route::get('bahan/{bahan}/riwayat', [BahanController::class, 'riwayat'])->name('bahan.riwayat');
 
         Route::get('pengaturan', [PengaturanController::class, 'edit'])->name('pengaturan');
         Route::put('pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');

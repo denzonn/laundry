@@ -28,6 +28,14 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    // Kirim WA otomatis lewat Fonnte (job App\Jobs\KirimWhatsapp). Default mati.
+    'whatsapp' => [
+        'driver' => 'fonnte',
+        'enabled' => (bool) env('WA_AUTO_SEND', false),
+        'token' => env('WA_FONNTE_TOKEN'),
+        'url' => 'https://api.fonnte.com/send',
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

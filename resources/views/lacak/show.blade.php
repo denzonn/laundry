@@ -7,7 +7,7 @@
     <meta name="robots" content="noindex">
     <title>Lacak Laundry - {{ $toko->nama_toko }}</title>
     @include('includes.style')
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    @include('includes.pwa')
 </head>
 
 @use('App\Models\Order')

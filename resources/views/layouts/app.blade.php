@@ -11,10 +11,7 @@
     @include('includes.style')
     @stack('addon-style')
 
-    <!-- Favicon / App Icon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    @include('includes.pwa')
 </head>
 
 <body class="bg-slate-50 font-poppins overflow-x-hidden print:bg-white [print-color-adjust:exact]">

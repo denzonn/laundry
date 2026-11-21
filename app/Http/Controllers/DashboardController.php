@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bahan;
 use App\Models\Order;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
@@ -29,6 +30,7 @@ class DashboardController extends Controller
             ]);
             $data['pendapatanHariIni'] = $data['grafik']->last();
             $data['piutang'] = (int) Order::piutang()->sum(DB::raw('total - dibayar'));
+            $data['bahanMenipis'] = Bahan::menipis()->orderBy('nama')->pluck('nama');
         }
 
         return view('dashboard', $data);

@@ -11,10 +11,7 @@
 
     @include('includes.style')
 
-    <!-- Favicon / App Icon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    @include('includes.pwa')
 </head>
 
 <body class="font-poppins text-[#0d0d0e] overflow-x-hidden" data-page="{{ trim($__env->yieldContent('page')) }}"

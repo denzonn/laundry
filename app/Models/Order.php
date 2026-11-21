@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\KirimWhatsapp;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,6 +42,24 @@ class Order extends Model
     ];
 
     protected $appends = ['sisa'];
+
+    /** WA otomatis (bila diaktifkan di .env): order masuk & saat siap diambil. Dikirim setelah transaksi commit. */
+    protected static function booted(): void
+    {
+        static::created(fn (Order $o) => $o->kirimWaOtomatis('masuk'));
+        static::updated(function (Order $o) {
+            if ($o->wasChanged('status') && $o->status === 'siap_diambil') {
+                $o->kirimWaOtomatis('selesai');
+            }
+        });
+    }
+
+    public function kirimWaOtomatis(string $jenis): void
+    {
+        if (KirimWhatsapp::aktif()) {
+            KirimWhatsapp::dispatch($this->id, $jenis)->afterCommit();
+        }
+    }
 
     public function pelanggan(): BelongsTo
     {

@@ -20,6 +20,15 @@
 @endphp
 
 @section('content')
+    {{-- STOK BAHAN MENIPIS (owner) --}}
+    @if (($bahanMenipis ?? collect())->isNotEmpty())
+        <a href="{{ route('bahan') }}" class="mb-4 flex min-h-[44px] items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-800 hover:bg-amber-100">
+            <i class="fa-solid fa-jug-detergent shrink-0 text-amber-500"></i>
+            <span class="min-w-0 flex-1 truncate"><b>Stok menipis:</b> {{ $bahanMenipis->join(', ') }}</span>
+            <i class="fa-solid fa-chevron-right shrink-0 text-xs text-amber-400"></i>
+        </a>
+    @endif
+
     {{-- SAPAAN --}}
     <div class="flex items-end justify-between gap-3">
         <div class="min-w-0">

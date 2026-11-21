@@ -71,10 +71,17 @@ order_id FK, metode_pembayaran_id FK, user_id FK, jumlah, tanggal, catatan null
 - kategori_pengeluaran: nama unique(50)
 - pengeluaran: kategori_pengeluaran_id FK restrict, user_id FK restrict, tanggal date (index), jumlah, keterangan null, foto_nota null (path disk `public`, file dihapus saat diganti/dihapus)
 
+## bahan & mutasi_bahan (Fase 7)
+- bahan: nama unique(50), satuan string(20) (liter/kg/pcs/pak), stok decimal(10,2), stok_minimum decimal(10,2). Menipis = `stok <= stok_minimum` (scope `Bahan::menipis()`)
+- mutasi_bahan: bahan_id FK cascade, user_id FK restrict, jenis enum(`masuk`,`keluar`,`penyesuaian`), jumlah decimal(10,2) (positif; untuk `penyesuaian` = stok baru hasil hitung fisik), stok_setelah decimal(10,2), keterangan null
+
+> Stok hanya diubah lewat `Bahan::mutasi()` (transaksi + `lockForUpdate`, keluar tidak boleh membuat stok minus), supaya selalu ada jejak di mutasi_bahan.
+
 ## Relasi
 ```
 pelanggan 1─* orders 1─* order_items *─1 layanan
                     1─* pembayaran *─1 metode_pembayaran
                     1─* order_status_logs
-users 1─* orders / pembayaran / pengeluaran
+users 1─* orders / pembayaran / pengeluaran / mutasi_bahan
+bahan 1─* mutasi_bahan
 ```

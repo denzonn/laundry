@@ -13,6 +13,7 @@
             ['metode-pembayaran', 'Metode Bayar', 'fa-wallet', true],
         ],
         'Keuangan' => [['pengeluaran', 'Pengeluaran', 'fa-money-bill-wave', true]],
+        'Gudang' => [['bahan', 'Stok Bahan', 'fa-boxes-stacked', true]],
         'Laporan' => [
             ['laporan.pendapatan', 'Pendapatan', 'fa-chart-line', true],
             ['laporan.order', 'Order', 'fa-chart-bar', true],
