@@ -78,7 +78,10 @@ Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. 
 ## Konvensi
 
 - Logika status & uang order ada di model [Order.php](app/Models/Order.php) (`ubahStatus`, `bayar`, `statusBerikutnya`, `kodeBaru`). Controller hanya validasi + transaksi DB + `lockForUpdate`. Jangan duplikasi aturan ini di JS selain untuk tampilan.
-- Pesan WhatsApp dibangun di PHP satu tempat: `Order::pesanWa('masuk'|'selesai')` / `Order::waUrl(...)` (template dari `Pengaturan::toko()`). Jangan merakit pesan WA di JS.
+- Pesan WhatsApp dibangun di PHP satu tempat: `Order::pesanWa('masuk'|'selesai'|'tagihan')` / `Order::waUrl(...)` (template dari `Pengaturan::toko()`, `tagihan` dari `Order::TEMPLATE_TAGIHAN`). Jangan merakit pesan WA di JS.
+- Kriteria order terlambat & piutang ada di scope `Order::terlambat()` / `Order::piutang()`; label status bayar di `Order::LABEL_BAYAR`. Pakai ini, jangan tulis ulang kondisinya.
+- Dashboard & laporan (read-only) dirender server-side di Blade, filter lewat query string `?start=&end=` (partial [laporan/_periode](resources/views/laporan/_periode.blade.php)), bukan pola AJAX JSON. Query agregat di controller, hanya fungsi SQL yang jalan di MySQL & SQLite (`DATE()`, bukan `DATE_FORMAT`).
+- Cetak: layout sudah menyembunyikan sidebar/header/footer/bottom nav saat print; di halaman pakai `print:hidden` untuk tombol dan `hidden print:block` untuk judul cetak.
 - Halaman publik (`/lacak`) tidak memakai `layouts.app`; kode order bisa ditebak, jadi jangan tampilkan no HP/alamat/item, nama pelanggan disamarkan.
 - Hapus master yang dipakai order → FK `restrictOnDelete` → handler di [bootstrap/app.php](bootstrap/app.php) membalas 422 dengan pesan jelas.
 - Bottom nav HP ada di layout; elemen `fixed bottom-*` di halaman harus di atas `bottom-16` di HP/tablet, atau sembunyikan nav dengan `@section('no_bottom_nav', true)`.

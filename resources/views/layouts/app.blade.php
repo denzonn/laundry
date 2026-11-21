@@ -17,7 +17,7 @@
     <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
 </head>
 
-<body class="bg-slate-50 font-poppins overflow-x-hidden">
+<body class="bg-slate-50 font-poppins overflow-x-hidden print:bg-white [print-color-adjust:exact]">
 
     <div class="flex min-h-screen">
 
@@ -32,7 +32,7 @@
                    transition-all duration-300
 
                    -translate-x-full
-                   lg:translate-x-0">
+                   lg:translate-x-0 print:hidden">
 
             @include('includes.sidebar')
 
@@ -41,7 +41,7 @@
         <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black/40 z-40 lg:hidden">
         </div>
 
-        <div class="flex-1 min-w-0 lg:ml-[280px] flex flex-col min-h-screen">
+        <div class="flex-1 min-w-0 lg:ml-[280px] print:ml-0 flex flex-col min-h-screen">
 
             <header
                 class="sticky top-0 z-30
@@ -49,7 +49,7 @@
                     bg-white
                     border-b border-slate-200
                     px-4 lg:px-8
-                    flex items-center justify-between">
+                    flex items-center justify-between print:hidden">
 
                 <div class="flex items-center gap-4">
 
@@ -77,7 +77,7 @@
 
             </header>
 
-            <main class="flex-1 min-w-0 p-4 md:p-6 lg:p-8 overflow-x-clip {{ View::hasSection('no_bottom_nav') ? '' : 'pb-24' }} lg:pb-8">
+            <main class="flex-1 min-w-0 p-4 md:p-6 lg:p-8 overflow-x-clip {{ View::hasSection('no_bottom_nav') ? '' : 'pb-24' }} lg:pb-8 print:p-0"> 
 
                 @yield('content')
 
@@ -86,7 +86,7 @@
             <footer
                 class="bg-white/60 backdrop-blur-md
                 border-t border-slate-100
-                px-8 py-4">
+                px-8 py-4 print:hidden">
 
                 <div class="flex items-center justify-between">
 

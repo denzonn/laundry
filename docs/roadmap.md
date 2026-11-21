@@ -86,11 +86,13 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 ## Fase 5 — Dashboard & Laporan
 
-- [ ] Dashboard: order hari ini, pendapatan hari ini, order per status (antrian), order jatuh tempo/terlambat
-- [ ] Laporan Pendapatan (periode, per metode bayar)
-- [ ] Laporan Order (periode, per layanan, per status)
-- [ ] Laporan Piutang (order belum lunas)
-- [ ] Export Excel/PDF (nanti; awalnya cukup print-friendly)
+- [x] Dashboard: order hari ini, pendapatan hari ini, order per status (antrian), order jatuh tempo/terlambat
+  - antrian per status → link `order?status=xxx` (Daftar Order membaca `?status=`), daftar siap diambil + tombol WA
+  - uang (pendapatan hari ini, piutang, grafik 7 hari CSS) hanya untuk owner; kasir melihat jumlah & antrian saja
+- [x] Laporan Pendapatan (periode, per metode bayar, per hari) — basis kas: Σ `pembayaran.jumlah`
+- [x] Laporan Order (periode, per layanan, per status) — omzet & per layanan tanpa order batal, jumlah batal tetap tampil
+- [x] Laporan Piutang (order belum lunas, terlama di atas, umur tagihan, tombol WA pengingat)
+- [~] Export Excel/PDF: baru print-friendly (`print:` Tailwind + tombol Cetak). Library export belum dipasang, tunggu kebutuhan
 
 ## Fase 6 — Pengeluaran & Laba Sederhana
 

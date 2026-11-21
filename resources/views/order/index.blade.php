@@ -151,6 +151,10 @@
 
         $('#statusBayar').on('change', () => loadData());
         debounceSearch('#search', () => loadData());
-        loadData();
+
+        // ?status=xxx dari dashboard → buka tab itu
+        const statusAwal = new URLSearchParams(location.search).get('status');
+        const tabAwal = $('.status-tab').filter((_, el) => statusAwal && el.dataset.status === statusAwal);
+        tabAwal.length ? tabAwal.trigger('click') : loadData();
     </script>
 @endpush

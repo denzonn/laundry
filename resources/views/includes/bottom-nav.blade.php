@@ -8,7 +8,7 @@
     ];
 @endphp
 
-<nav class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur lg:hidden"
+<nav class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur lg:hidden print:hidden"
     style="padding-bottom: env(safe-area-inset-bottom)">
     <div class="mx-auto grid h-16 max-w-lg grid-cols-4">
         @foreach ($nav as [$route, $label, $icon])

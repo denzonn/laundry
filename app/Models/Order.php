@@ -17,6 +17,8 @@ class Order extends Model
         'siap_diambil' => 'Siap Diambil', 'diambil' => 'Diambil', 'batal' => 'Batal',
     ];
 
+    public const LABEL_BAYAR = ['belum' => 'Belum Bayar', 'dp' => 'DP', 'lunas' => 'Lunas'];
+
     /** Warna badge (sesuai docs/ui-guidelines.md). Dipakai Blade & JS (window.WARNA_ORDER). */
     public const WARNA = [
         'antrian' => 'bg-slate-100 text-slate-700', 'dicuci' => 'bg-blue-100 text-blue-700',
@@ -24,6 +26,9 @@ class Order extends Model
         'diambil' => 'bg-gray-100 text-gray-500', 'batal' => 'bg-red-100 text-red-700',
         'belum' => 'bg-red-100 text-red-700', 'dp' => 'bg-amber-100 text-amber-700', 'lunas' => 'bg-emerald-100 text-emerald-700',
     ];
+
+    /** Pengingat tagihan (laporan piutang). Belum ada template di pengaturan, placeholder sama dengan pesanWa. */
+    public const TEMPLATE_TAGIHAN = "Halo {nama}, kami mengingatkan sisa tagihan laundry {kode} sebesar {sisa} dari total {total}.\nCek status: {link}\nTerima kasih!";
 
     protected $fillable = [
         'kode', 'pelanggan_id', 'user_id', 'parfum_id', 'tanggal_masuk', 'estimasi_selesai', 'tanggal_diambil',
@@ -65,6 +70,18 @@ class Order extends Model
     public function pembayaran(): HasMany
     {
         return $this->hasMany(Pembayaran::class)->latest('id');
+    }
+
+    /** Belum selesai dikerjakan padahal estimasi sudah lewat. */
+    public function scopeTerlambat($q)
+    {
+        return $q->whereIn('status', ['antrian', 'dicuci', 'disetrika'])->where('estimasi_selesai', '<', now());
+    }
+
+    /** Masih ada sisa tagihan (order batal tidak ditagih). */
+    public function scopePiutang($q)
+    {
+        return $q->where('status', '!=', 'batal')->whereColumn('total', '>', 'dibayar');
     }
 
     public function getSisaAttribute(): int
@@ -134,12 +151,13 @@ class Order extends Model
         return $bayar;
     }
 
-    /** Pesan WA dari template pengaturan ('masuk' | 'selesai'), placeholder diganti. Butuh relasi pelanggan. */
+    /** Pesan WA dari template pengaturan ('masuk' | 'selesai') atau TEMPLATE_TAGIHAN ('tagihan'). Butuh relasi pelanggan. */
     public function pesanWa(string $jenis): string
     {
         $rp = fn (int $v) => 'Rp '.number_format($v, 0, ',', '.');
+        $template = $jenis === 'tagihan' ? self::TEMPLATE_TAGIHAN : Pengaturan::toko()->{'template_wa_'.$jenis};
 
-        return strtr((string) Pengaturan::toko()->{'template_wa_'.$jenis}, [
+        return strtr((string) $template, [
             '{nama}' => $this->pelanggan->nama,
             '{kode}' => $this->kode,
             '{total}' => $rp($this->total),

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LacakController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\MetodePembayaranController;
 use App\Http\Controllers\OrderController;
@@ -20,7 +22,7 @@ Route::middleware('throttle:30,1')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('profil', [ProfilController::class, 'edit'])->name('profil');
     Route::put('profil', [ProfilController::class, 'update'])->name('profil.update');
@@ -70,6 +72,10 @@ Route::middleware('auth')->group(function () {
         Route::put('user/{user}', [UserController::class, 'update'])->name('user.update');
         Route::patch('user/{user}/toggle', [UserController::class, 'toggle'])->name('user.toggle');
         Route::delete('user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+
+        Route::get('laporan/pendapatan', [LaporanController::class, 'pendapatan'])->name('laporan.pendapatan');
+        Route::get('laporan/order', [LaporanController::class, 'order'])->name('laporan.order');
+        Route::get('laporan/piutang', [LaporanController::class, 'piutang'])->name('laporan.piutang');
 
         Route::get('pengaturan', [PengaturanController::class, 'edit'])->name('pengaturan');
         Route::put('pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');

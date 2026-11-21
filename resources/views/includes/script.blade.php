@@ -98,7 +98,7 @@
 
 <script>
     window.WARNA_ORDER = @json(\App\Models\Order::WARNA);
-    window.LABEL_ORDER = @json(\App\Models\Order::LABEL + ['belum' => 'Belum Bayar', 'dp' => 'DP', 'lunas' => 'Lunas']);
+    window.LABEL_ORDER = @json(\App\Models\Order::LABEL + \App\Models\Order::LABEL_BAYAR);
 
     $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 
