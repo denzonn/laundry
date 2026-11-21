@@ -33,7 +33,7 @@
 
                         <div class="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md">
 
-                            <img src="{{ asset('images/logo.png') }}" class="h-14 w-auto" alt="Logo">
+                            <img src="{{ asset('icons/icon-192.png') }}" class="h-14 w-auto" alt="Logo">
 
                         </div>
 
@@ -227,7 +227,7 @@
                             <div
                                 class="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-red-700 to-red-600 shadow-xl">
 
-                                <img src="{{ asset('images/logo.png') }}" class="h-12 w-auto" alt="Logo">
+                                <img src="{{ asset('icons/icon-192.png') }}" class="h-12 w-auto" alt="Logo">
 
                             </div>
 

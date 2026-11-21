@@ -35,7 +35,7 @@
     <div class="h-[72px] flex items-center px-6 border-b border-slate-200">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center">
-                <img src="{{ $toko->logo ? asset('storage/' . $toko->logo) : asset('images/logo.png') }}" class="max-h-10 rounded-lg" alt="">
+                <img src="{{ $toko->logo ? asset('storage/' . $toko->logo) : asset('icons/icon-192.png') }}" class="max-h-10 rounded-lg" alt="">
             </div>
             <div>
                 <h2 class="font-semibold text-slate-800">{{ $toko->nama_toko }}</h2>
