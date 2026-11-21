@@ -26,12 +26,15 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 ## Fase 1 — Auth, Role & Pengaturan Toko
 
-- [ ] Migration: tambah `role` (`owner`, `kasir`), `no_hp`, `foto`, `aktif` di `users`
-- [ ] Middleware `role` (`role:owner`)
-- [ ] Seeder: 1 owner, 1 kasir
-- [ ] CRUD User/Karyawan (owner only)
-- [ ] Halaman Pengaturan Toko: nama, alamat, no HP/WA, logo, footer struk, ukuran kertas struk (58/80mm)
-- [ ] Ganti password & profil sendiri
+- [x] Migration: tambah `role` (`owner`, `kasir`), `no_hp`, `foto`, `aktif` di `users`
+- [x] Middleware `role` (`role:owner`)
+- [x] Seeder: 1 owner, 1 kasir
+- [x] CRUD User/Karyawan (owner only)
+- [x] Halaman Pengaturan Toko: nama, alamat, no HP/WA, logo, footer struk, ukuran kertas struk (58/80mm)
+- [x] Ganti password & profil sendiri (+ foto)
+- [x] Login ditolak bila akun nonaktif; menonaktifkan user memutus sesinya
+- [x] Owner tidak bisa hapus/nonaktifkan/menurunkan role dirinya sendiri
+- [x] Menu sidebar khusus owner disembunyikan dari kasir
 
 **Selesai bila**: kasir tidak bisa akses menu owner (ada test).
 

@@ -46,7 +46,9 @@ Helper JS global (di [resources/js/](resources/js/), dipakai, jangan dibuat ulan
 | `formatRupiah`, `toNumber`, `getNominal`, `formatTanggal`, `formatTanggalIndo`, `formatTanggalJam`, `formatBadgeStatus` | format |
 | `App.loading.show()` / `App.submitLoading()` | loading overlay (di `includes/script.blade.php`) |
 
-Komponen Blade: `<x-input>`, `<x-select>` di [resources/views/components/](resources/views/components/).
+Komponen Blade `<x-input>`, `<x-select>` di [resources/views/components/](resources/views/components/) masih **kosong**, jangan dipakai sebelum diisi.
+CSRF untuk semua `$.ajax` sudah di-set global (`$.ajaxSetup` di `includes/script.blade.php`).
+`App.submitLoading()` aktif global di layout: setiap `submit` form memunculkan loading, jadi form AJAX wajib memanggil `App.loading.hide()` di **awal** `success`/`error` (bukan di `complete`, karena `hide()` = `Swal.close()` yang akan menutup alert error).
 Flash session `success|error|warning|info` otomatis jadi toast SweetAlert.
 
 Warna tema di [tailwind.config.js](tailwind.config.js): `primary`, `primary_hover`, `secondary`, `background`. Font `font-poppins`.
@@ -60,6 +62,14 @@ Target utama: kasir pakai **HP & tablet** di meja laundry. Desktop tetap rapi. D
 - Tabel di mobile → tampil sebagai **card list** (`md:hidden` card, `hidden md:table` tabel).
 - Tombol/target sentuh minimal 44px (`h-11`). Input `text-base` di mobile (cegah zoom iOS).
 - Aksi utama (Order Baru) mudah dijangkau jempol: bottom nav / FAB di mobile.
+
+### Tampilan Tiap Halaman Harus Unik
+
+Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. Setiap halaman dirancang sesuai isi & tugasnya:
+- Pilih layout yang paling cocok dengan datanya: grid kartu (user, layanan), list/timeline (order, riwayat status), form + preview langsung (pengaturan struk), kanban per status (antrian order), ringkasan angka + grafik (dashboard/laporan).
+- Beri tiap halaman identitas visual sendiri: header/hero kecil dengan ikon & aksen warna khas modul, ilustrasi state kosong yang relevan (bukan ikon folder generik), komposisi berbeda.
+- Tetap konsisten di **dasar**: warna tema, font, radius (`rounded-2xl`), ukuran tombol, badge status, helper JS. Unik di komposisi, bukan di sistem desain.
+- Sebelum membuat halaman baru, cek halaman yang sudah ada supaya tidak mengulang layout yang sama.
 
 ## Konvensi
 
@@ -78,4 +88,4 @@ Item hanya tampil bila route-nya sudah terdaftar (`Route::has`), jadi cukup buat
 ## Testing
 
 `phpunit.xml` memakai sqlite `:memory:`, jadi aman dari DB MySQL. Jangan dihapus, karena `RefreshDatabase` menghapus isi database.
-Login seeder: `test@example.com` / `password`.
+Login seeder: `owner@laundry.test` / `password` (owner), `kasir@laundry.test` / `password` (kasir).
