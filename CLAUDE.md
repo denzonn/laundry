@@ -86,6 +86,7 @@ Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. 
 - Hapus master yang dipakai order → FK `restrictOnDelete` → handler di [bootstrap/app.php](bootstrap/app.php) membalas 422 dengan pesan jelas.
 - Bottom nav HP ada di layout; elemen `fixed bottom-*` di halaman harus di atas `bottom-16` di HP/tablet, atau sembunyikan nav dengan `@section('no_bottom_nav', true)`.
 - Layout `<main>` memakai `overflow-x-clip` (bukan `hidden`) agar `sticky` di dalam halaman tetap jalan.
+- Upload file lewat AJAX: `ajaxRequest` tidak mendukung `FormData`, pakai `$.ajax({ type: 'POST', data: new FormData(form), processData: false, contentType: false })` langsung; update kirim `_method=PUT` di FormData (PHP tidak mem-parse multipart untuk PUT). Contoh: [pengeluaran/index](resources/views/pengeluaran/index.blade.php).
 - Data kecil (layanan, parfum, metode) → endpoint `data` tanpa pagination; data besar (pelanggan, order) → `paginate()`.
 
 - Bahasa domain & UI: **Bahasa Indonesia** (nama tabel/kolom boleh Indonesia, konsisten dengan [docs/database.md](docs/database.md)).

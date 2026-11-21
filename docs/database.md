@@ -68,8 +68,8 @@ order_id FK cascade, user_id FK, status, catatan null
 order_id FK, metode_pembayaran_id FK, user_id FK, jumlah, tanggal, catatan null
 
 ## kategori_pengeluaran & pengeluaran (Fase 6)
-- kategori_pengeluaran: nama
-- pengeluaran: kategori_pengeluaran_id FK, user_id FK, tanggal, jumlah, keterangan, foto_nota null
+- kategori_pengeluaran: nama unique(50)
+- pengeluaran: kategori_pengeluaran_id FK restrict, user_id FK restrict, tanggal date (index), jumlah, keterangan null, foto_nota null (path disk `public`, file dihapus saat diganti/dihapus)
 
 ## Relasi
 ```

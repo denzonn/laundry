@@ -9,6 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PengaturanController;
+use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,17 @@ Route::middleware('auth')->group(function () {
         Route::get('laporan/pendapatan', [LaporanController::class, 'pendapatan'])->name('laporan.pendapatan');
         Route::get('laporan/order', [LaporanController::class, 'order'])->name('laporan.order');
         Route::get('laporan/piutang', [LaporanController::class, 'piutang'])->name('laporan.piutang');
+
+        Route::get('laporan/laba-rugi', [LaporanController::class, 'labaRugi'])->name('laporan.laba-rugi');
+
+        Route::get('pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran');
+        Route::get('pengeluaran/data', [PengeluaranController::class, 'data'])->name('pengeluaran.data');
+        Route::post('pengeluaran', [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+        Route::put('pengeluaran/{pengeluaran}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+        Route::delete('pengeluaran/{pengeluaran}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+        Route::post('pengeluaran/kategori', [PengeluaranController::class, 'kategoriStore'])->name('pengeluaran.kategori.store');
+        Route::put('pengeluaran/kategori/{kategori}', [PengeluaranController::class, 'kategoriUpdate'])->name('pengeluaran.kategori.update');
+        Route::delete('pengeluaran/kategori/{kategori}', [PengeluaranController::class, 'kategoriDestroy'])->name('pengeluaran.kategori.destroy');
 
         Route::get('pengaturan', [PengaturanController::class, 'edit'])->name('pengaturan');
         Route::put('pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');

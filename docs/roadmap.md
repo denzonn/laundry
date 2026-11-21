@@ -96,9 +96,9 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 ## Fase 6 — Pengeluaran & Laba Sederhana
 
-- [ ] Kategori pengeluaran (deterjen, listrik, gaji, dll)
-- [ ] Input pengeluaran harian (+ foto nota opsional)
-- [ ] Laporan Laba Rugi sederhana: pendapatan − pengeluaran per periode
+- [x] Kategori pengeluaran (deterjen, listrik, gaji, dll) — default di `KategoriPengeluaranSeeder`, dikelola dari halaman Pengeluaran; kategori terpakai tidak bisa dihapus (422)
+- [x] Input pengeluaran harian (+ foto nota opsional, image ≤ 2 MB di disk `public/nota`) — owner saja; input oleh kasir belum (tunggu kebutuhan)
+- [x] Laporan Laba Rugi sederhana: pendapatan − pengeluaran per periode — basis kas (Σ `pembayaran.jumlah` − Σ `pengeluaran.jumlah`), rincian per kategori, arus per hari (≤ 62 hari) / per bulan
 
 ## Fase 7 — Lanjutan (dikerjakan bila dibutuhkan)
 

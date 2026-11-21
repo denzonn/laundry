@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Pembayaran;
+use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
 
 class LaporanController extends Controller
@@ -55,6 +56,36 @@ class LaporanController extends Controller
             'perStatus' => (clone $q)->selectRaw('status, count(*) as jumlah')->groupBy('status')->pluck('jumlah', 'status'),
             'omzet' => (int) (clone $q)->where('status', '!=', 'batal')->sum('total'),
         ]);
+    }
+
+    /** Laba rugi kas: uang masuk (pembayaran) − pengeluaran di periode. */
+    public function labaRugi(Request $request)
+    {
+        [$start, $end] = $this->periode($request);
+        $harian = fn ($model) => $model::whereBetween('tanggal', [$start, $end])
+            ->selectRaw('DATE(tanggal) as tgl, SUM(jumlah) as total')->groupBy('tgl')->pluck('total', 'tgl');
+        $masuk = $harian(Pembayaran::class);
+        $keluar = $harian(Pengeluaran::class);
+
+        $perKategori = Pengeluaran::whereBetween('pengeluaran.tanggal', [$start, $end])
+            ->join('kategori_pengeluaran as k', 'k.id', '=', 'pengeluaran.kategori_pengeluaran_id')
+            ->selectRaw('k.id, k.nama, SUM(pengeluaran.jumlah) as total, COUNT(*) as jumlah')
+            ->groupBy('k.id', 'k.nama')->orderByDesc('total')->get();
+
+        // Tren: per hari bila ≤ 62 hari, selebihnya per bulan (dikelompokkan di PHP agar jalan di MySQL & SQLite)
+        $bulanan = $start->diffInDays($end) > 62;
+        $tren = $masuk->keys()->merge($keluar->keys())->unique()->sort()
+            ->groupBy(fn ($tgl) => $bulanan ? substr($tgl, 0, 7) : $tgl)
+            ->map(fn ($tgls) => [
+                'masuk' => (int) $tgls->sum(fn ($t) => $masuk[$t] ?? 0),
+                'keluar' => (int) $tgls->sum(fn ($t) => $keluar[$t] ?? 0),
+            ]);
+
+        $pendapatan = (int) $masuk->sum();
+        $pengeluaran = (int) $keluar->sum();
+
+        return view('laporan.laba-rugi', compact('start', 'end', 'perKategori', 'tren', 'bulanan', 'pendapatan', 'pengeluaran')
+            + ['laba' => $pendapatan - $pengeluaran]);
     }
 
     public function piutang()
