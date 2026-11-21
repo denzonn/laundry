@@ -96,7 +96,10 @@
                         <p class="font-bold text-slate-800">${formatRupiah(o.total)}</p>
                         ${badgeOrder(o.status_bayar)}
                     </div>
-                    ${tombolLanjut(o)}
+                    <div class="flex gap-2">
+                        ${o.wa_url ? `<a href="${esc(o.wa_url)}" target="_blank" title="Kirim WA: laundry selesai" class="flex h-10 w-10 items-center justify-center rounded-xl bg-green-600 text-white hover:bg-green-700"><i class="fa-brands fa-whatsapp text-lg"></i></a>` : ''}
+                        ${tombolLanjut(o)}
+                    </div>
                 </div>
             </div>`;
         }

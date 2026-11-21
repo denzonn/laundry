@@ -12,6 +12,9 @@
     $posisi = array_search($order->status, Order::ALUR, true);
     $batal = $order->status === 'batal';
     $berikut = $order->statusBerikutnya();
+    $waUtama = in_array($order->status, ['siap_diambil', 'diambil'], true) ? 'selesai' : 'masuk';
+    $waLain = $waUtama === 'masuk' ? 'selesai' : 'masuk';
+    $waLabel = ['masuk' => 'Nota order masuk', 'selesai' => 'Laundry selesai'];
 
     // timeline gabungan status + pembayaran, terbaru di atas
     $timeline = $order->logs->map(fn($l) => ['waktu' => $l->created_at, 'jenis' => 'status', 'item' => $l])
@@ -23,6 +26,18 @@
     <a href="{{ route('order') }}" class="mb-4 inline-flex h-10 items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-800">
         <i class="fa-solid fa-arrow-left"></i> Daftar Order
     </a>
+
+    @if (request('baru'))
+        <div class="mb-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 p-5 text-white shadow-lg shadow-emerald-500/20">
+            <p class="font-semibold"><i class="fa-solid fa-circle-check mr-2"></i>Order tersimpan. Berikan nota ke pelanggan:</p>
+            <div class="mt-4 grid grid-cols-2 gap-3">
+                <a href="{{ route('order.struk', [$order, 'print' => 1]) }}"
+                    class="flex h-12 items-center justify-center gap-2 rounded-xl bg-white text-sm font-semibold text-emerald-700"><i class="fa-solid fa-print"></i> Cetak Struk</a>
+                <a href="{{ $order->waUrl('masuk') }}" target="_blank"
+                    class="flex h-12 items-center justify-center gap-2 rounded-xl bg-emerald-900/30 text-sm font-semibold text-white ring-1 ring-white/50"><i class="fa-brands fa-whatsapp text-lg"></i> Kirim WA</a>
+            </div>
+        </div>
+    @endif
 
     {{-- HEADER + STEPPER --}}
     <div class="rounded-2xl border border-slate-200 bg-white p-5">
@@ -41,6 +56,22 @@
                     {{ ['belum' => 'Belum Bayar', 'dp' => 'DP', 'lunas' => 'Lunas'][$order->status_bayar] }}
                 </span>
             </div>
+        </div>
+
+        {{-- NOTA: struk & WA --}}
+        <div class="mt-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap md:items-center">
+            <a href="{{ route('order.struk', $order) }}"
+                class="flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                <i class="fa-solid fa-print"></i> Cetak Struk
+            </a>
+            <a href="{{ $order->waUrl($waUtama) }}" target="_blank" title="{{ $waLabel[$waUtama] }}"
+                class="flex h-11 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 text-sm font-semibold text-white hover:bg-green-700">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Kirim WA
+            </a>
+            <a href="{{ $order->waUrl($waLain) }}" target="_blank"
+                class="col-span-2 flex h-11 items-center justify-center text-xs font-medium text-green-700 hover:underline md:col-span-1 md:px-2">
+                atau kirim: {{ $waLabel[$waLain] }}
+            </a>
         </div>
 
         @if ($batal)

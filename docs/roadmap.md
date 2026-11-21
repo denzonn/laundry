@@ -74,10 +74,13 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 ## Fase 4 — Struk & Notifikasi WhatsApp
 
-- [ ] Halaman cetak struk (CSS `@media print`, lebar 58/80mm), tombol Print
-- [ ] Tombol "Kirim WA" → link `https://wa.me/62xxx?text=...` (nota + link lacak). Tanpa API berbayar dulu
-- [ ] Template pesan WA di pengaturan (order masuk, order selesai)
-- [ ] Halaman publik **Lacak Order** `/lacak/{kode}` (tanpa login, tampil status & total saja)
+- [x] Halaman cetak struk (CSS `@media print`, lebar 58/80mm), tombol Print (`order/{order}/struk`, `?print=1` auto print)
+- [x] Tombol "Kirim WA" → link `https://wa.me/62xxx?text=...` (nota + link lacak). Tanpa API berbayar dulu
+- [x] Template pesan WA di pengaturan (order masuk, order selesai)
+- [x] Halaman publik **Lacak Order** `/lacak/{kode}` (tanpa login, tampil status & total saja)
+- [x] Banner "Cetak Struk / Kirim WA" di Detail Order setelah order dibuat (`?baru=1`)
+- [x] Tombol WA cepat di tiket Daftar Order berstatus Siap Diambil
+- [x] Form `/lacak` cari kode, nama pelanggan disamarkan (`Bu***`), throttle 30/menit
 
 **Selesai bila**: kasir bisa cetak struk & kirim WA dalam 2 tap.
 

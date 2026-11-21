@@ -166,8 +166,8 @@
 @push('addon-script')
     <script>
         const contoh = {
-            '{nama}': 'Budi', '{kode}': 'LND-{{ now()->format('ymd') }}-0001', '{total}': 'Rp. 46.000',
-            '{sisa}': 'Rp. 0', '{estimasi}': '{{ now()->addDays(2)->translatedFormat('d M Y H:i') }}', '{link}': '{{ url('/lacak') }}/LND-...',
+            '{nama}': 'Budi', '{kode}': 'LND-{{ now()->format('ymd') }}-0001', '{total}': 'Rp 46.000',
+            '{sisa}': 'Rp 0', '{estimasi}': '{{ now()->addDays(2)->translatedFormat('d M Y H:i') }}', '{link}': '{{ url('/lacak') }}/LND-...',
         };
         let lastWa = $('[data-wa]').first()[0];
 

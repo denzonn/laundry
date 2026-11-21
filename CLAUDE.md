@@ -78,6 +78,8 @@ Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. 
 ## Konvensi
 
 - Logika status & uang order ada di model [Order.php](app/Models/Order.php) (`ubahStatus`, `bayar`, `statusBerikutnya`, `kodeBaru`). Controller hanya validasi + transaksi DB + `lockForUpdate`. Jangan duplikasi aturan ini di JS selain untuk tampilan.
+- Pesan WhatsApp dibangun di PHP satu tempat: `Order::pesanWa('masuk'|'selesai')` / `Order::waUrl(...)` (template dari `Pengaturan::toko()`). Jangan merakit pesan WA di JS.
+- Halaman publik (`/lacak`) tidak memakai `layouts.app`; kode order bisa ditebak, jadi jangan tampilkan no HP/alamat/item, nama pelanggan disamarkan.
 - Hapus master yang dipakai order → FK `restrictOnDelete` → handler di [bootstrap/app.php](bootstrap/app.php) membalas 422 dengan pesan jelas.
 - Bottom nav HP ada di layout; elemen `fixed bottom-*` di halaman harus di atas `bottom-16` di HP/tablet, atau sembunyikan nav dengan `@section('no_bottom_nav', true)`.
 - Layout `<main>` memakai `overflow-x-clip` (bukan `hidden`) agar `sticky` di dalam halaman tetap jalan.

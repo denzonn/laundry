@@ -134,6 +134,26 @@ class Order extends Model
         return $bayar;
     }
 
+    /** Pesan WA dari template pengaturan ('masuk' | 'selesai'), placeholder diganti. Butuh relasi pelanggan. */
+    public function pesanWa(string $jenis): string
+    {
+        $rp = fn (int $v) => 'Rp '.number_format($v, 0, ',', '.');
+
+        return strtr((string) Pengaturan::toko()->{'template_wa_'.$jenis}, [
+            '{nama}' => $this->pelanggan->nama,
+            '{kode}' => $this->kode,
+            '{total}' => $rp($this->total),
+            '{sisa}' => $rp($this->sisa),
+            '{estimasi}' => $this->estimasi_selesai->translatedFormat('d M Y H:i'),
+            '{link}' => route('lacak.show', $this->kode),
+        ]);
+    }
+
+    public function waUrl(string $jenis): string
+    {
+        return 'https://wa.me/'.$this->pelanggan->no_hp.'?text='.rawurlencode($this->pesanWa($jenis));
+    }
+
     public static function kodeBaru(): string
     {
         $prefix = 'LND-'.now()->format('ymd').'-';

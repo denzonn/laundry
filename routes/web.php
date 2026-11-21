@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LacakController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\MetodePembayaranController;
 use App\Http\Controllers\OrderController;
@@ -11,6 +12,12 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
+
+// publik, tanpa login
+Route::middleware('throttle:30,1')->group(function () {
+    Route::get('lacak', [LacakController::class, 'index'])->name('lacak');
+    Route::get('lacak/{kode}', [LacakController::class, 'show'])->name('lacak.show');
+});
 
 Route::middleware('auth')->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
@@ -31,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('order/baru', [OrderController::class, 'create'])->name('order.create');
     Route::post('order', [OrderController::class, 'store'])->name('order.store');
     Route::get('order/{order}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('order/{order}/struk', [OrderController::class, 'struk'])->name('order.struk');
     Route::patch('order/{order}/status', [OrderController::class, 'status'])->name('order.status');
     Route::post('order/{order}/bayar', [OrderController::class, 'bayar'])->name('order.bayar');
 
@@ -68,4 +76,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

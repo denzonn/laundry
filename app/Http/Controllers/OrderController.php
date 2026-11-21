@@ -7,7 +7,7 @@ use App\Models\Layanan;
 use App\Models\MetodePembayaran;
 use App\Models\Order;
 use App\Models\Parfum;
-use App\Models\Pelanggan;
+use App\Models\Pengaturan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -36,6 +36,9 @@ class OrderController extends Controller
             ->with('pelanggan:id,nama,no_hp')
             ->latest('id')
             ->paginate(15);
+
+        // tombol WA cepat di tiket "siap diambil"
+        $orders->getCollection()->where('status', 'siap_diambil')->each(fn ($o) => $o->setAttribute('wa_url', $o->waUrl('selesai')));
 
         return response()->json($orders->toArray() + [
             'counts' => (clone $base)->selectRaw('status, count(*) as jumlah')->groupBy('status')->pluck('jumlah', 'status'),
@@ -104,7 +107,7 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => "Order {$order->kode} berhasil dibuat.",
-            'redirect' => route('order.show', $order),
+            'redirect' => route('order.show', [$order, 'baru' => 1]),
         ]);
     }
 
@@ -115,6 +118,14 @@ class OrderController extends Controller
         return view('order.show', [
             'order' => $order,
             'metode' => MetodePembayaran::where('aktif', true)->orderBy('id')->get(),
+        ]);
+    }
+
+    public function struk(Order $order)
+    {
+        return view('order.struk', [
+            'order' => $order->load(['pelanggan', 'parfum', 'user:id,name', 'items']),
+            'toko' => Pengaturan::toko(),
         ]);
     }
 
