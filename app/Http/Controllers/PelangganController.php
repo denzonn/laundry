@@ -15,16 +15,16 @@ class PelangganController extends Controller
 
     public function data(Request $request)
     {
-        $s = $request->search;
-        // "0812" dicari sebagai "62812"; "8123" tetap "8123"
-        $hp = preg_replace('/\D/', '', (string) $s) !== '' ? Pelanggan::normalisasiHp($s) : null;
+        return Pelanggan::cari($request->search)->orderBy('nama')->paginate(20);
+    }
 
-        return Pelanggan::query()
-            ->when($s, fn ($q) => $q->where(fn ($q) => $q
-                ->where('nama', 'like', "%$s%")
-                ->when($hp, fn ($q) => $q->orWhere('no_hp', 'like', "%$hp%"))))
-            ->orderBy('nama')
-            ->paginate(20);
+    public function orders(Pelanggan $pelanggan)
+    {
+        return response()->json([
+            'jumlah' => $pelanggan->orders()->where('status', '!=', 'batal')->count(),
+            'total' => (int) $pelanggan->orders()->where('status', '!=', 'batal')->sum('total'),
+            'data' => $pelanggan->orders()->latest('id')->limit(5)->get(['id', 'kode', 'status', 'status_bayar', 'total', 'tanggal_masuk']),
+        ]);
     }
 
     public function store(Request $request)

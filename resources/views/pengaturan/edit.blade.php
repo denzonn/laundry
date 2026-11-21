@@ -11,7 +11,7 @@
 
 @section('content')
     <form action="{{ route('pengaturan.update') }}" method="POST" enctype="multipart/form-data"
-        class="grid gap-6 lg:grid-cols-5 pb-20 lg:pb-0">
+        class="grid gap-6 lg:grid-cols-5 pb-24 lg:pb-0">
         @csrf
         @method('PUT')
 
@@ -155,7 +155,7 @@
         </aside>
 
         {{-- SIMPAN: sticky di HP --}}
-        <div class="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/90 p-3 backdrop-blur lg:static lg:col-span-5 lg:border-0 lg:bg-transparent lg:p-0">
+        <div class="fixed inset-x-0 bottom-16 z-20 border-t border-slate-200 bg-white/90 p-3 backdrop-blur lg:static lg:col-span-5 lg:border-0 lg:bg-transparent lg:p-0">
             <button type="submit" class="h-12 w-full rounded-xl bg-teal-600 font-semibold text-white hover:bg-teal-700 lg:ml-auto lg:block lg:w-56">
                 <i class="fa-solid fa-floppy-disk mr-2"></i> Simpan Pengaturan
             </button>

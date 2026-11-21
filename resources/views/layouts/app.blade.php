@@ -77,7 +77,7 @@
 
             </header>
 
-            <main class="flex-1 min-w-0 p-4 md:p-6 lg:p-8 overflow-x-clip">
+            <main class="flex-1 min-w-0 p-4 md:p-6 lg:p-8 overflow-x-clip {{ View::hasSection('no_bottom_nav') ? '' : 'pb-24' }} lg:pb-8">
 
                 @yield('content')
 
@@ -121,6 +121,10 @@
         </div>
 
     </div>
+
+    @unless (View::hasSection('no_bottom_nav'))
+        @include('includes.bottom-nav')
+    @endunless
 
     @include('includes.script')
     <script>

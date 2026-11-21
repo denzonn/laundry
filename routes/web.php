@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\MetodePembayaranController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PengaturanController;
@@ -23,6 +24,15 @@ Route::middleware('auth')->group(function () {
     Route::post('pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
     Route::put('pelanggan/{pelanggan}', [PelangganController::class, 'update'])->name('pelanggan.update');
     Route::delete('pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
+    Route::get('pelanggan/{pelanggan}/orders', [PelangganController::class, 'orders'])->name('pelanggan.orders');
+
+    Route::get('order', [OrderController::class, 'index'])->name('order');
+    Route::get('order/data', [OrderController::class, 'data'])->name('order.data');
+    Route::get('order/baru', [OrderController::class, 'create'])->name('order.create');
+    Route::post('order', [OrderController::class, 'store'])->name('order.store');
+    Route::get('order/{order}', [OrderController::class, 'show'])->name('order.show');
+    Route::patch('order/{order}/status', [OrderController::class, 'status'])->name('order.status');
+    Route::post('order/{order}/bayar', [OrderController::class, 'bayar'])->name('order.bayar');
 
     Route::middleware('role:owner')->group(function () {
         Route::get('layanan', [LayananController::class, 'index'])->name('layanan');

@@ -51,22 +51,24 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 ## Fase 3 — Transaksi Order (INTI)
 
-- [ ] Halaman **Order Baru** (mobile-first, 1 layar):
+- [x] Halaman **Order Baru** (mobile-first, 1 layar):
   - pilih/cari pelanggan, atau tambah cepat (nama + HP) inline
   - tambah item layanan → qty/berat → subtotal otomatis
   - diskon (nominal), biaya antar/jemput (opsional), catatan, parfum
   - estimasi selesai otomatis dari layanan terlama (bisa diubah)
   - pembayaran: Bayar Nanti / DP / Lunas
-- [ ] Generate kode invoice `LND-YYMMDD-XXXX`
-- [ ] Hitung total di server (jangan percaya total dari client)
-- [ ] **Daftar Order**: filter status, status bayar, tanggal; cari kode/nama/HP
-- [ ] **Detail Order**: item, riwayat status, riwayat pembayaran
-- [ ] Update status sesuai alur (lihat [alur-bisnis.md](alur-bisnis.md)), tercatat di `order_status_logs`
-- [ ] Tambah pembayaran (pelunasan) → status bayar otomatis
-- [ ] Batalkan order (owner only, wajib alasan)
-- [ ] Test: hitung total, DP/pelunasan, transisi status ilegal ditolak
-- [ ] Cegah hapus layanan/pelanggan/parfum/metode yang sudah dipakai order (FK `restrictOnDelete` → pesan "nonaktifkan saja")
-- [ ] Detail pelanggan: tampilkan riwayat order (placeholder sudah ada di panel detail)
+- [x] Generate kode invoice `LND-YYMMDD-XXXX`
+- [x] Hitung total di server (jangan percaya total dari client)
+- [x] **Daftar Order**: filter status, status bayar, tanggal; cari kode/nama/HP
+- [x] **Detail Order**: item, riwayat status, riwayat pembayaran
+- [x] Update status sesuai alur (lihat [alur-bisnis.md](alur-bisnis.md)), tercatat di `order_status_logs`
+- [x] Tambah pembayaran (pelunasan) → status bayar otomatis
+- [x] Batalkan order (owner only, wajib alasan)
+- [x] Test: hitung total, DP/pelunasan, transisi status ilegal ditolak
+- [x] Cegah hapus layanan/pelanggan/parfum/metode yang sudah dipakai order (FK `restrictOnDelete` → pesan "nonaktifkan saja")
+- [x] Detail pelanggan: tampilkan riwayat order (5 terakhir + jumlah & total belanja)
+- [x] Bottom nav HP: Beranda · Order · + Baru · Pelanggan (`@section('no_bottom_nav', true)` untuk menyembunyikan)
+- [ ] Edit order setelah dibuat (ubah item/harga, owner only), belum dibuat, tunggu kebutuhan
 
 **Selesai bila**: satu order bisa dibuat → diproses → diambil → lunas, dari HP.
 

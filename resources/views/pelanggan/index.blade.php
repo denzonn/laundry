@@ -127,7 +127,7 @@
                     ${info('fa-location-dot', p.alamat)}
                     ${info('fa-note-sticky', p.catatan)}
                     <p class="flex gap-3 text-sm text-slate-400"><i class="fa-regular fa-calendar mt-0.5 w-4"></i>Pelanggan sejak ${formatTanggalIndo(p.created_at)}</p>
-                    <div class="rounded-xl border border-dashed border-slate-200 p-3 text-center text-xs text-slate-400">Riwayat order tampil di sini setelah Fase 3.</div>
+                    <div class="riwayat-order rounded-xl bg-slate-50 p-3"><div class="h-10 animate-pulse rounded-lg bg-slate-200"></div></div>
                 </div>
                 <div class="flex gap-2 border-t border-slate-100 p-4">
                     <button type="button" onclick="formPelanggan(${p.id})" class="h-11 flex-1 rounded-xl bg-slate-100 text-sm font-medium text-slate-700 hover:bg-slate-200"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
@@ -152,6 +152,26 @@
                 $('#detailMobile').html(html);
                 showModal('modalDetail');
             }
+            muatRiwayat(id);
+        }
+
+        function muatRiwayat(id) {
+            ajaxRequest({
+                url: `{{ url('pelanggan') }}/${id}/orders`,
+                success(res) {
+                    const list = res.data.map(o => `
+                        <a href="{{ url('order') }}/${o.id}" class="flex items-center justify-between gap-2 rounded-lg px-2 py-2 hover:bg-white">
+                            <span><span class="block font-mono text-xs text-slate-500">${esc(o.kode)}</span>${badgeOrder(o.status)}</span>
+                            <span class="text-right text-sm font-semibold text-slate-700">${formatRupiah(o.total)}<span class="block">${badgeOrder(o.status_bayar)}</span></span>
+                        </a>`).join('');
+                    $('.riwayat-order').html(`
+                        <div class="mb-2 grid grid-cols-2 gap-2 text-center">
+                            <div class="rounded-lg bg-white p-2"><p class="text-lg font-bold text-slate-800">${res.jumlah}</p><p class="text-[11px] text-slate-400">order</p></div>
+                            <div class="rounded-lg bg-white p-2"><p class="text-sm font-bold text-emerald-700">${formatRupiah(res.total)}</p><p class="text-[11px] text-slate-400">total belanja</p></div>
+                        </div>
+                        ${list || '<p class="py-2 text-center text-xs text-slate-400">Belum pernah order.</p>'}`);
+                },
+            });
         }
 
         function loadData(page = 1) {
@@ -214,6 +234,7 @@
                     pelanggan[res.data.id] = res.data;
                     selectedId = res.data.id;
                     $('#detailDesktop').html(detailHtml(res.data));
+                    muatRiwayat(res.data.id);
                     loadData();
                 },
                 error: (xhr) => formError(xhr, this),

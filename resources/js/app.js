@@ -459,3 +459,9 @@ window.formError = function (xhr, form = document) {
 
     $.each(xhr.responseJSON.errors, (field, msg) => $(form).find(`.err[data-for="${field}"]`).text(msg[0]));
 };
+
+// Badge status order / status bayar. Warna & label dari App\Models\Order (window.WARNA_ORDER, LABEL_ORDER).
+window.badgeOrder = function (status) {
+    const cls = window.WARNA_ORDER?.[status] ?? "bg-slate-100 text-slate-600";
+    return `<span class="inline-flex items-center rounded-lg px-2 py-0.5 text-[11px] font-semibold ${cls}">${esc(window.LABEL_ORDER?.[status] ?? status)}</span>`;
+};

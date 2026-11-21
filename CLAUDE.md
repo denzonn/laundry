@@ -45,6 +45,7 @@ Helper JS global (di [resources/js/](resources/js/), dipakai, jangan dibuat ulan
 | `showToast(msg, type)` | toast |
 | `esc(str)` | escape HTML, **wajib** untuk data user yang dirender lewat template string |
 | `formatHp('62812...')` | tampil `0812-xxxx-xxx` |
+| `badgeOrder(status)` | badge status order / status bayar; warna & label dari `Order::WARNA` / `Order::LABEL` (global `window.WARNA_ORDER`) |
 | `formError(xhr, form)` | error handler form AJAX: tutup loading, 422 → isi `<p class="err" data-for="field">` |
 | `formatRupiah`, `toNumber`, `getNominal`, `formatTanggal`, `formatTanggalIndo`, `formatTanggalJam`, `formatBadgeStatus` | format |
 | `App.loading.show()` / `App.submitLoading()` | loading overlay (di `includes/script.blade.php`) |
@@ -76,6 +77,9 @@ Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. 
 
 ## Konvensi
 
+- Logika status & uang order ada di model [Order.php](app/Models/Order.php) (`ubahStatus`, `bayar`, `statusBerikutnya`, `kodeBaru`). Controller hanya validasi + transaksi DB + `lockForUpdate`. Jangan duplikasi aturan ini di JS selain untuk tampilan.
+- Hapus master yang dipakai order → FK `restrictOnDelete` → handler di [bootstrap/app.php](bootstrap/app.php) membalas 422 dengan pesan jelas.
+- Bottom nav HP ada di layout; elemen `fixed bottom-*` di halaman harus di atas `bottom-16` di HP/tablet, atau sembunyikan nav dengan `@section('no_bottom_nav', true)`.
 - Layout `<main>` memakai `overflow-x-clip` (bukan `hidden`) agar `sticky` di dalam halaman tetap jalan.
 - Data kecil (layanan, parfum, metode) → endpoint `data` tanpa pagination; data besar (pelanggan, order) → `paginate()`.
 
