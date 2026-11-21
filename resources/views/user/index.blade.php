@@ -2,7 +2,7 @@
 
 @section('title', 'User - ' . config('app.name'))
 @section('page_title', 'Tim Laundry')
-@section('page_description', 'Kelola akun owner & kasir')
+@section('page_description', 'Kelola akun owner, kasir & kurir')
 
 @section('content')
     {{-- HERO --}}
@@ -15,7 +15,7 @@
                 <h2 class="text-3xl font-bold" id="statTotal">-</h2>
             </div>
 
-            <div class="grid grid-cols-3 gap-2 md:flex md:gap-3">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 md:flex md:gap-3">
                 <div class="rounded-xl bg-white/15 px-4 py-2 backdrop-blur">
                     <p class="text-[11px] uppercase tracking-wider text-violet-100">Owner</p>
                     <p class="text-lg font-semibold" id="statOwner">-</p>
@@ -23,6 +23,10 @@
                 <div class="rounded-xl bg-white/15 px-4 py-2 backdrop-blur">
                     <p class="text-[11px] uppercase tracking-wider text-violet-100">Kasir</p>
                     <p class="text-lg font-semibold" id="statKasir">-</p>
+                </div>
+                <div class="rounded-xl bg-white/15 px-4 py-2 backdrop-blur">
+                    <p class="text-[11px] uppercase tracking-wider text-violet-100">Kurir</p>
+                    <p class="text-lg font-semibold" id="statKurir">-</p>
                 </div>
                 <div class="rounded-xl bg-white/15 px-4 py-2 backdrop-blur">
                     <p class="text-[11px] uppercase tracking-wider text-violet-100">Nonaktif</p>
@@ -38,6 +42,7 @@
             <button type="button" data-role="" class="role-tab h-10 flex-1 md:flex-none rounded-lg px-4 text-sm font-medium bg-white text-violet-700 shadow-sm">Semua</button>
             <button type="button" data-role="owner" class="role-tab h-10 flex-1 md:flex-none rounded-lg px-4 text-sm font-medium text-slate-500">Owner</button>
             <button type="button" data-role="kasir" class="role-tab h-10 flex-1 md:flex-none rounded-lg px-4 text-sm font-medium text-slate-500">Kasir</button>
+            <button type="button" data-role="kurir" class="role-tab h-10 flex-1 md:flex-none rounded-lg px-4 text-sm font-medium text-slate-500">Kurir</button>
         </div>
 
         <div class="flex gap-2">
@@ -83,7 +88,7 @@
 
                     <div>
                         <label class="mb-2 block text-sm font-medium text-slate-700">Pilih Role</label>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-3 gap-2">
                             <label class="cursor-pointer">
                                 <input type="radio" name="role" value="kasir" class="peer sr-only" checked>
                                 <div class="rounded-xl border-2 border-slate-200 p-3 peer-checked:border-violet-600 peer-checked:bg-violet-50">
@@ -98,6 +103,14 @@
                                     <i class="fa-solid fa-crown text-amber-500"></i>
                                     <p class="mt-1 text-sm font-semibold text-slate-800">Owner</p>
                                     <p class="text-xs text-slate-500">Akses penuh</p>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="role" value="kurir" class="peer sr-only">
+                                <div class="rounded-xl border-2 border-slate-200 p-3 peer-checked:border-violet-600 peer-checked:bg-violet-50">
+                                    <i class="fa-solid fa-motorcycle text-sky-600"></i>
+                                    <p class="mt-1 text-sm font-semibold text-slate-800">Kurir</p>
+                                    <p class="text-xs text-slate-500">Antar & jemput</p>
                                 </div>
                             </label>
                         </div>
@@ -159,9 +172,11 @@
             const avatar = u.foto_url ?
                 `<img src="${u.foto_url}" class="h-14 w-14 rounded-2xl object-cover" alt="">` :
                 `<div class="flex h-14 w-14 items-center justify-center rounded-2xl text-lg font-bold ${avatarColor(u.name)}">${esc(initials(u.name))}</div>`;
-            const role = u.role === 'owner' ?
-                `<span class="inline-flex items-center gap-1 rounded-lg bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700"><i class="fa-solid fa-crown"></i> Owner</span>` :
-                `<span class="inline-flex items-center gap-1 rounded-lg bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700"><i class="fa-solid fa-cash-register"></i> Kasir</span>`;
+            const role = {
+                owner: `<span class="inline-flex items-center gap-1 rounded-lg bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-700"><i class="fa-solid fa-crown"></i> Owner</span>`,
+                kasir: `<span class="inline-flex items-center gap-1 rounded-lg bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-700"><i class="fa-solid fa-cash-register"></i> Kasir</span>`,
+                kurir: `<span class="inline-flex items-center gap-1 rounded-lg bg-sky-100 px-2 py-0.5 text-[11px] font-semibold text-sky-700"><i class="fa-solid fa-motorcycle"></i> Kurir</span>`,
+            }[u.role];
             const isMe = u.id === ME;
 
             return `
@@ -208,6 +223,7 @@
                     $('#statTotal').text(res.stats.total);
                     $('#statOwner').text(res.stats.owner);
                     $('#statKasir').text(res.stats.kasir);
+                    $('#statKurir').text(res.stats.kurir);
                     $('#statNonaktif').text(res.stats.nonaktif);
 
                     $('#userGrid').html(res.data.length ? res.data.map(userCard).join('') : `

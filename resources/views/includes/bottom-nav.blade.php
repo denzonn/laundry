@@ -1,16 +1,18 @@
 {{-- Navigasi bawah khusus HP/tablet (lg ke atas pakai sidebar). Sembunyikan per halaman dengan @section('no_bottom_nav', true). --}}
 @php
-    $nav = [
-        ['dashboard', 'Beranda', 'fa-house'],
-        ['order', 'Order', 'fa-receipt'],
-        ['order.create', 'Baru', 'fa-plus'],
-        ['pelanggan', 'Pelanggan', 'fa-users'],
-    ];
+    $nav = auth()->user()->isKurir()
+        ? [['tugas', 'Tugas', 'fa-route'], ['profil', 'Profil', 'fa-user']]
+        : [
+            ['dashboard', 'Beranda', 'fa-house'],
+            ['order', 'Order', 'fa-receipt'],
+            ['order.create', 'Baru', 'fa-plus'],
+            ['pelanggan', 'Pelanggan', 'fa-users'],
+        ];
 @endphp
 
 <nav class="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur lg:hidden print:hidden"
     style="padding-bottom: env(safe-area-inset-bottom)">
-    <div class="mx-auto grid h-16 max-w-lg grid-cols-4">
+    <div class="mx-auto grid h-16 max-w-lg {{ count($nav) === 2 ? 'grid-cols-2' : 'grid-cols-4' }}">
         @foreach ($nav as [$route, $label, $icon])
             @if ($route === 'order.create')
                 <a href="{{ route($route) }}" class="flex flex-col items-center justify-center">

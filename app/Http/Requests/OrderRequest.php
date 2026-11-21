@@ -19,6 +19,7 @@ class OrderRequest extends FormRequest
             'biaya_antar' => ['nullable', 'integer', 'min:0', 'max:10000000'],
             'estimasi_selesai' => ['nullable', 'date', 'after:now'],
             'catatan' => ['nullable', 'string', 'max:500'],
+            'poin_ditukar' => ['nullable', 'integer', 'min:0'],
             'bayar' => ['nullable', 'integer', 'min:0'],
             'metode_pembayaran_id' => ['nullable', Rule::exists('metode_pembayaran', 'id')->where('aktif', true)],
         ];
@@ -28,7 +29,7 @@ class OrderRequest extends FormRequest
     {
         return [
             'pelanggan_id' => 'pelanggan', 'items' => 'layanan', 'items.*.layanan_id' => 'layanan',
-            'items.*.qty' => 'jumlah', 'metode_pembayaran_id' => 'metode pembayaran', 'estimasi_selesai' => 'estimasi selesai',
+            'items.*.qty' => 'jumlah', 'metode_pembayaran_id' => 'metode pembayaran', 'estimasi_selesai' => 'estimasi selesai', 'poin_ditukar' => 'poin',
         ];
     }
 

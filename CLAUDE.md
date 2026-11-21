@@ -96,15 +96,20 @@ Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. 
 - Uang disimpan `unsignedBigInteger` (Rupiah bulat), berat `decimal(8,2)` kg.
 - Validasi pakai Form Request bila rules > 3 field; selain itu `$request->validate()` di controller.
 - Satu controller per modul, tanpa repository/service layer kecuali logika dipakai >1 tempat (mis. hitung total order).
-- Otorisasi role via middleware `role:owner,kasir` (lihat Fase 1 roadmap).
+- Otorisasi role via middleware `role:owner,kasir` (lihat Fase 1 roadmap). Role: `User::ROLE` = owner, kasir, kurir.
+- **Kurir** hanya boleh: dashboard (dialihkan ke `tugas`), `profil`, `tugas`, `PATCH pengiriman/{id}/status` (tugas miliknya, dicek di controller → 403) dan logout. Semua route order/pelanggan/pengiriman lain ada di grup `role:owner,kasir`; route baru untuk owner/kasir **wajib** masuk grup itu (jangan di grup `auth` saja).
+- Aturan status antar-jemput di `Pengiriman::ubahStatus` (`Pengiriman::ALUR`, kurir tidak bisa `batal`). Ongkos yang ditagih tetap `orders.biaya_antar`; `pengiriman.biaya` hanya info.
+- **Poin member**: saldo hanya diubah lewat `Pelanggan::mutasiPoin(jenis, ±poin, order, ket)` (lock + `riwayat_poin`). Dapat poin di `Order::ubahStatus` → `beriPoin()` saat `diambil`, refund saat `batal`; tukar poin dihitung & divalidasi di `OrderController::store` (`potongan_poin`). Konfigurasi di `Pengaturan::toko()` (`poin_aktif`, `rupiah_per_poin`, `nilai_poin`).
+- Blade `@json([...])` dengan array berisi koma **rusak** (Blade memecah argumen di koma). Untuk data ke `onclick`, pakai `{{ json_encode([...]) }}` (contoh: `bukaPengiriman` di [order/show](resources/views/order/show.blade.php)).
 - Setiap fitur yang ada logika uang/status wajib ada minimal 1 Pest feature test.
 
 ## Menu Sidebar
 
-Menu didefinisikan sebagai array di [sidebar.blade.php](resources/views/includes/sidebar.blade.php): `[nama_route, label, ikon]`.
+Menu didefinisikan sebagai array di [sidebar.blade.php](resources/views/includes/sidebar.blade.php): `[nama_route, label, ikon, roles?]`.
 Item hanya tampil bila route-nya sudah terdaftar (`Route::has`), jadi cukup buat route dengan nama yang sama.
+Elemen ke-4 = daftar role yang boleh melihat (mis. `$o` = `['owner']`, `['kurir']`); tanpa elemen ke-4 = owner & kasir. Bottom nav ([bottom-nav](resources/views/includes/bottom-nav.blade.php)) untuk kurir hanya **Tugas · Profil**.
 
 ## Testing
 
 `phpunit.xml` memakai sqlite `:memory:`, jadi aman dari DB MySQL. Jangan dihapus, karena `RefreshDatabase` menghapus isi database.
-Login seeder: `owner@laundry.test` / `password` (owner), `kasir@laundry.test` / `password` (kasir).
+Login seeder: `owner@laundry.test` / `password` (owner), `kasir@laundry.test` / `password` (kasir), `kurir@laundry.test` / `password` (kurir).

@@ -5,6 +5,7 @@
 @section('page_description', $order->kode)
 
 @use('App\Models\Order')
+@use('App\Models\Pengiriman')
 
 @php
     $rp = fn($v) => 'Rp ' . number_format($v, 0, ',', '.');
@@ -149,6 +150,9 @@
                 @if ($order->diskon)
                     <div class="flex justify-between"><dt class="text-slate-500">Diskon</dt><dd class="text-red-600">- {{ $rp($order->diskon) }}</dd></div>
                 @endif
+                @if ($order->potongan_poin)
+                    <div class="flex justify-between"><dt class="text-slate-500"><i class="fa-solid fa-star mr-1 text-amber-500"></i>Tukar {{ $order->poin_ditukar }} poin</dt><dd class="text-red-600">- {{ $rp($order->potongan_poin) }}</dd></div>
+                @endif
                 @if ($order->biaya_antar)
                     <div class="flex justify-between"><dt class="text-slate-500">Antar/Jemput</dt><dd>{{ $rp($order->biaya_antar) }}</dd></div>
                 @endif
@@ -199,6 +203,72 @@
             </ol>
         </section>
     </div>
+
+    {{-- ANTAR / JEMPUT --}}
+    @php
+        $jadwalDefault = ($order->estimasi_selesai->isFuture() ? $order->estimasi_selesai : now()->addHour())->format('Y-m-d\TH:i');
+        $ikonJenis = ['jemput' => 'fa-house-chimney', 'antar' => 'fa-truck-fast'];
+    @endphp
+    <section class="mt-6 rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50 to-white p-5">
+        <div class="flex items-center justify-between gap-3">
+            <div>
+                <h3 class="font-semibold text-slate-800"><i class="fa-solid fa-motorcycle mr-2 text-sky-600"></i>Antar / Jemput</h3>
+                <p class="text-xs text-slate-500">Ongkos yang ditagih tetap dari "Antar/Jemput" di rincian order</p>
+            </div>
+            @unless ($batal)
+                <button type="button"
+                    onclick="bukaPengiriman({{ json_encode(['url' => route('pengiriman.store', $order), 'method' => 'POST', 'jenis' => 'antar', 'alamat' => $order->pelanggan->alamat, 'jadwal' => $jadwalDefault, 'biaya' => $order->biaya_antar ?: null]) }})"
+                    class="flex h-11 shrink-0 items-center gap-2 rounded-xl bg-sky-600 px-4 text-sm font-semibold text-white hover:bg-sky-700">
+                    <i class="fa-solid fa-plus"></i> Jadwalkan
+                </button>
+            @endunless
+        </div>
+
+        <div class="mt-4 space-y-3">
+            @forelse ($order->pengiriman as $p)
+                @php $aktif = isset(Pengiriman::ALUR[$p->status]); @endphp
+                <div class="flex flex-col gap-3 rounded-xl bg-white p-4 ring-1 ring-slate-200 sm:flex-row sm:items-center {{ $aktif ? '' : 'opacity-70' }}">
+                    <div class="flex min-w-0 flex-1 items-start gap-3">
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sky-100 text-sky-600"><i class="fa-solid {{ $ikonJenis[$p->jenis] }}"></i></span>
+                        <div class="min-w-0">
+                            <p class="flex flex-wrap items-center gap-2 font-semibold text-slate-800">
+                                {{ ucfirst($p->jenis) }} · {{ $p->jadwal->translatedFormat('D, d M H:i') }}
+                                <span class="rounded-lg px-2 py-0.5 text-[11px] font-semibold {{ Pengiriman::WARNA[$p->status] }}">{{ Pengiriman::LABEL[$p->status] }}</span>
+                            </p>
+                            <p class="text-sm text-slate-500">{{ $p->alamat }}</p>
+                            <p class="text-xs text-slate-400">
+                                <i class="fa-solid fa-user mr-1"></i>{{ $p->kurir->name ?? 'Kurir belum ditentukan' }}
+                                @if ($p->biaya) · Ongkos {{ $rp($p->biaya) }} @endif
+                                @if ($p->selesai_at) · Selesai {{ $p->selesai_at->translatedFormat('d M H:i') }} @endif
+                            </p>
+                            @if ($p->catatan)
+                                <p class="text-xs text-amber-700"><i class="fa-solid fa-note-sticky mr-1"></i>{{ $p->catatan }}</p>
+                            @endif
+                        </div>
+                    </div>
+                    @if ($aktif)
+                        <div class="grid grid-cols-2 gap-2 sm:flex">
+                            <button type="button"
+                                onclick="bukaPengiriman({{ json_encode(['url' => route('pengiriman.update', $p), 'method' => 'PUT', 'judul' => 'Ubah Jadwal '.ucfirst($p->jenis), 'alamat' => $p->alamat, 'jadwal' => $p->jadwal->format('Y-m-d\TH:i'), 'kurir_id' => $p->kurir_id, 'biaya' => $p->biaya ?: null, 'catatan' => $p->catatan]) }})"
+                                class="h-11 rounded-xl border border-slate-200 px-4 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                                <i class="fa-solid fa-pen mr-1"></i> Ubah
+                            </button>
+                            <button type="button" onclick="statusPengiriman({{ $p->id }}, 'batal')" class="h-11 rounded-xl px-4 text-sm font-medium text-red-600 hover:bg-red-50">
+                                <i class="fa-solid fa-ban mr-1"></i> Batal
+                            </button>
+                        </div>
+                    @endif
+                </div>
+            @empty
+                <div class="flex items-center gap-3 rounded-xl border-2 border-dashed border-sky-200 p-4 text-sm text-slate-500">
+                    <i class="fa-solid fa-map-location-dot text-2xl text-sky-300"></i>
+                    Belum ada jadwal. Jadwalkan bila pelanggan minta cucian dijemput atau diantar.
+                </div>
+            @endforelse
+        </div>
+    </section>
+
+    @include('pengiriman._form')
 
     {{-- MODAL BAYAR --}}
     <div id="modalBayar" class="modal-overlay hidden opacity-0 fixed inset-0 z-50 bg-black/40 p-4 transition-opacity duration-300">

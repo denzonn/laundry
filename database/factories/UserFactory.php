@@ -39,6 +39,11 @@ class UserFactory extends Factory
         return $this->state(fn () => ['role' => 'owner']);
     }
 
+    public function kurir(): static
+    {
+        return $this->state(fn () => ['role' => 'kurir']);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

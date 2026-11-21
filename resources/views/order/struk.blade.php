@@ -63,6 +63,7 @@
         <div class="hr"></div>
         <div class="row"><span>Subtotal</span><span>{{ $rp($order->subtotal) }}</span></div>
         @if ($order->diskon) <div class="row"><span>Diskon</span><span>-{{ $rp($order->diskon) }}</span></div> @endif
+        @if ($order->potongan_poin) <div class="row"><span>Tukar {{ $order->poin_ditukar }} poin</span><span>-{{ $rp($order->potongan_poin) }}</span></div> @endif
         @if ($order->biaya_antar) <div class="row"><span>Antar/Jemput</span><span>{{ $rp($order->biaya_antar) }}</span></div> @endif
         <div class="row b big"><span>TOTAL</span><span>{{ $rp($order->total) }}</span></div>
         <div class="row"><span>Dibayar</span><span>{{ $rp($order->dibayar) }}</span></div>

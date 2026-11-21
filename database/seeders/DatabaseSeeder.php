@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->owner()->create(['name' => 'Owner Laundry', 'email' => 'owner@laundry.test']);
         User::factory()->create(['name' => 'Kasir Laundry', 'email' => 'kasir@laundry.test']);
+        User::factory()->kurir()->create(['name' => 'Kurir Laundry', 'email' => 'kurir@laundry.test']);
 
         Pengaturan::toko();
 

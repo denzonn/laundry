@@ -1,31 +1,38 @@
 @php
-    // Menu tampil otomatis begitu route-nya terdaftar (lihat docs/roadmap.md). Elemen ke-4 = true → khusus owner.
+    // Menu tampil otomatis begitu route-nya terdaftar (lihat docs/roadmap.md).
+    // Elemen ke-4 = daftar role yang boleh melihat; tanpa elemen ke-4 = owner & kasir.
+    $o = ['owner'];
     $menus = [
-        '' => [['dashboard', 'Dashboard', 'fa-house']],
+        '' => [
+            ['dashboard', 'Dashboard', 'fa-house'],
+            ['tugas', 'Tugas Saya', 'fa-route', ['kurir']],
+            ['profil', 'Profil', 'fa-user', ['kurir']],
+        ],
         'Transaksi' => [
             ['order.create', 'Order Baru', 'fa-plus'],
             ['order', 'Daftar Order', 'fa-receipt'],
+            ['pengiriman', 'Antar Jemput', 'fa-motorcycle'],
         ],
         'Master' => [
             ['pelanggan', 'Pelanggan', 'fa-users'],
-            ['layanan', 'Layanan', 'fa-shirt', true],
-            ['parfum', 'Parfum', 'fa-spray-can-sparkles', true],
-            ['metode-pembayaran', 'Metode Bayar', 'fa-wallet', true],
+            ['layanan', 'Layanan', 'fa-shirt', $o],
+            ['parfum', 'Parfum', 'fa-spray-can-sparkles', $o],
+            ['metode-pembayaran', 'Metode Bayar', 'fa-wallet', $o],
         ],
-        'Keuangan' => [['pengeluaran', 'Pengeluaran', 'fa-money-bill-wave', true]],
-        'Gudang' => [['bahan', 'Stok Bahan', 'fa-boxes-stacked', true]],
+        'Keuangan' => [['pengeluaran', 'Pengeluaran', 'fa-money-bill-wave', $o]],
+        'Gudang' => [['bahan', 'Stok Bahan', 'fa-boxes-stacked', $o]],
         'Laporan' => [
-            ['laporan.pendapatan', 'Pendapatan', 'fa-chart-line', true],
-            ['laporan.order', 'Order', 'fa-chart-bar', true],
-            ['laporan.piutang', 'Piutang', 'fa-file-invoice-dollar', true],
-            ['laporan.laba-rugi', 'Laba Rugi', 'fa-scale-balanced', true],
+            ['laporan.pendapatan', 'Pendapatan', 'fa-chart-line', $o],
+            ['laporan.order', 'Order', 'fa-chart-bar', $o],
+            ['laporan.piutang', 'Piutang', 'fa-file-invoice-dollar', $o],
+            ['laporan.laba-rugi', 'Laba Rugi', 'fa-scale-balanced', $o],
         ],
         'Pengaturan' => [
-            ['pengaturan', 'Toko', 'fa-store', true],
-            ['user', 'User', 'fa-user-gear', true],
+            ['pengaturan', 'Toko', 'fa-store', $o],
+            ['user', 'User', 'fa-user-gear', $o],
         ],
     ];
-    $isOwner = auth()->user()->isOwner();
+    $role = auth()->user()->role;
     $toko = \App\Models\Pengaturan::toko();
 @endphp
 
@@ -47,7 +54,7 @@
     {{-- MENU --}}
     <div class="flex-1 overflow-y-auto px-4 py-6 space-y-8">
         @foreach ($menus as $group => $items)
-            @php $items = array_filter($items, fn($m) => Route::has($m[0]) && ($isOwner || empty($m[3]))); @endphp
+            @php $items = array_filter($items, fn($m) => Route::has($m[0]) && in_array($role, $m[3] ?? ['owner', 'kasir'], true)); @endphp
             @continue(!$items)
 
             <div>

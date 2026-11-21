@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bahan;
 use App\Models\Order;
 use App\Models\Pembayaran;
+use App\Models\Pengiriman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,12 +13,17 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        if ($request->user()->isKurir()) {
+            return redirect()->route('tugas');
+        }
+
         $data = [
             'orderHariIni' => Order::whereDate('tanggal_masuk', today())->where('status', '!=', 'batal')->count(),
             'antrian' => Order::whereIn('status', ['antrian', 'dicuci', 'disetrika', 'siap_diambil'])
                 ->selectRaw('status, count(*) as jumlah')->groupBy('status')->pluck('jumlah', 'status'),
             'terlambat' => Order::terlambat()->with('pelanggan:id,nama')->orderBy('estimasi_selesai')->limit(10)->get(),
             'jumlahTerlambat' => Order::terlambat()->count(),
+            'antarJemput' => Pengiriman::aktif()->whereDate('jadwal', '<=', today())->count(),
             'siap' => Order::where('status', 'siap_diambil')->with('pelanggan:id,nama,no_hp')->orderBy('updated_at')->limit(10)->get(),
         ];
 

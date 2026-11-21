@@ -2,7 +2,7 @@
 
 @section('title', 'Pengaturan Toko - ' . config('app.name'))
 @section('page_title', 'Pengaturan Toko')
-@section('page_description', 'Identitas toko, struk, dan pesan WhatsApp')
+@section('page_description', 'Identitas toko, struk, pesan WhatsApp, dan poin member')
 
 @php
     $input = 'h-11 w-full rounded-xl border-slate-200 text-base md:text-sm focus:border-teal-500 focus:ring-teal-500';
@@ -127,6 +127,47 @@
                     </p>
                 </div>
             </section>
+
+            {{-- Member & Poin --}}
+            <section class="rounded-2xl border border-slate-200 bg-white">
+                <div class="flex items-center gap-3 border-b border-slate-100 px-5 py-4">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-500"><i class="fa-solid fa-star"></i></span>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="font-semibold text-slate-800">Member & Poin</h3>
+                        <p class="text-xs text-slate-400">Pelanggan dapat poin saat cucian diambil, lalu bisa ditukar jadi potongan di order berikutnya</p>
+                    </div>
+                    <label class="relative inline-flex h-11 shrink-0 cursor-pointer items-center">
+                        <input type="hidden" name="poin_aktif" value="0">
+                        <input type="checkbox" name="poin_aktif" value="1" id="poinAktif" class="peer sr-only" @checked(old('poin_aktif', $toko->poin_aktif))>
+                        <span class="h-7 w-12 rounded-full bg-slate-300 transition peer-checked:bg-amber-500"></span>
+                        <span class="absolute left-1 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full bg-white shadow transition-all peer-checked:left-6"></span>
+                    </label>
+                </div>
+
+                <div class="space-y-4 p-5">
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label class="mb-1 block text-sm font-medium text-slate-700">Belanja per 1 poin</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rp</span>
+                                <input name="rupiah_per_poin" type="number" min="1000" inputmode="numeric" value="{{ old('rupiah_per_poin', $toko->rupiah_per_poin) }}" class="poin-input {{ $input }} pl-10">
+                            </div>
+                            @error('rupiah_per_poin') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-sm font-medium text-slate-700">Nilai tukar 1 poin</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">Rp</span>
+                                <input name="nilai_poin" type="number" min="1" inputmode="numeric" value="{{ old('nilai_poin', $toko->nilai_poin) }}" class="poin-input {{ $input }} pl-10">
+                            </div>
+                            @error('nilai_poin') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+                    <p id="poinContoh" class="flex items-start gap-2 rounded-xl bg-amber-50 px-3 py-2.5 text-xs text-amber-800">
+                        <i class="fa-solid fa-lightbulb mt-0.5"></i><span></span>
+                    </p>
+                </div>
+            </section>
         </div>
 
         {{-- KANAN: PREVIEW --}}
@@ -214,7 +255,16 @@
             $('#logoIcon').addClass('hidden');
         });
 
+        function syncPoin() {
+            const per = +$('[name=rupiah_per_poin]').val() || 0, nilai = +$('[name=nilai_poin]').val() || 0;
+            const dapat = per ? Math.floor(100000 / per) : 0;
+            $('#poinContoh span').text(($('#poinAktif').is(':checked') ? '' : '(Nonaktif) ') +
+                `Contoh: order ${formatRupiah(100000)} → dapat ${dapat} poin. ${dapat} poin bisa ditukar potongan ${formatRupiah(dapat * nilai)} (${per ? (dapat * nilai / 1000).toLocaleString('id-ID') : 0}% kembali).`);
+        }
+        $('.poin-input, #poinAktif').on('input change', syncPoin);
+
         syncStruk();
         syncWa(lastWa);
+        syncPoin();
     </script>
 @endpush

@@ -24,7 +24,10 @@ class PengaturanController extends Controller
             'template_wa_masuk' => ['nullable', 'string', 'max:1000'],
             'template_wa_selesai' => ['nullable', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'max:1024'],
-        ]);
+            'poin_aktif' => ['sometimes', 'boolean'],
+            'rupiah_per_poin' => ['sometimes', 'required', 'integer', 'min:1000', 'max:10000000'],
+            'nilai_poin' => ['sometimes', 'required', 'integer', 'min:1', 'max:1000000'],
+        ], [], ['rupiah_per_poin' => 'belanja per poin', 'nilai_poin' => 'nilai 1 poin']);
 
         $toko = Pengaturan::toko();
 

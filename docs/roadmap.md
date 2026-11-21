@@ -103,8 +103,8 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 ## Fase 7 — Lanjutan (dikerjakan bila dibutuhkan)
 
 - [ ] Multi cabang/outlet (`outlet_id` di order, user, pengeluaran) — menunggu keputusan owner
-- [ ] Antar-jemput & kurir (role `kurir`, jadwal, status pickup/delivery) — Fase 7b
-- [ ] Member / paket deposit / poin — Fase 7b
+- [x] Antar-jemput & kurir — role `kurir` (login hanya ke **Tugas Saya** `tugas` & Profil), tabel `pengiriman` (jemput/antar, jadwal, kurir, status `dijadwalkan → dalam_perjalanan → selesai` / `batal`). Jadwal dibuat di Detail Order bagian "Antar / Jemput"; papan **Antar Jemput** (`pengiriman`, owner+kasir) per tanggal/status/kurir untuk tugaskan ulang. Kurir hanya melihat sisa tagihan, pembayaran tetap dicatat kasir
+- [x] Member / poin — default **mati**, aktifkan di Pengaturan Toko → "Member & Poin" (default 1 poin per Rp10.000, 1 poin = Rp100). Poin didapat saat order `diambil`, ditukar di Order Baru, dikembalikan bila order batal; jejak di `riwayat_poin`. **Paket deposit/saldo belum**
 - [x] Inventori bahan (stok deterjen, parfum, plastik) — halaman **Stok Bahan** (`bahan`, owner, grup Gudang): tabung stok vs minimum, Masuk / Pakai / Stok opname via `Bahan::mutasi()`, riwayat 30 terakhir, banner stok menipis di dashboard owner. Default di `BahanSeeder`. Belum terhubung otomatis ke order (pemakaian dicatat manual)
 - [x] WhatsApp API otomatis (Fonnte, via queue) — job `KirimWhatsapp` saat order masuk & siap diambil, default **mati** (`WA_AUTO_SEND`, `WA_FONNTE_TOKEN` di `.env`). Tombol wa.me manual tetap ada. Wablas belum
 - [x] PWA (install di HP, ikon home screen) — `public/manifest.webmanifest`, `public/sw.js`, `public/offline.html`, ikon di `public/icons/`
@@ -115,13 +115,14 @@ Tujuan: login → dashboard kosong jalan tanpa error.
 
 | Grup | Menu | Role |
 |---|---|---|
-| — | Dashboard | semua |
-| Transaksi | Order Baru, Daftar Order | semua |
-| Master | Pelanggan | semua |
+| — | Dashboard | owner, kasir (kurir dialihkan ke Tugas Saya) |
+| — | Tugas Saya, Profil | kurir |
+| Transaksi | Order Baru, Daftar Order, Antar Jemput | owner, kasir |
+| Master | Pelanggan | owner, kasir |
 | Master | Layanan, Parfum, Metode Bayar | owner |
 | Keuangan | Pengeluaran | owner (kasir input saja: opsional) |
 | Gudang | Stok Bahan | owner |
 | Laporan | Pendapatan, Order, Piutang, Laba Rugi | owner |
 | Pengaturan | Toko, User | owner |
 
-Mobile: bottom nav 4 item → **Beranda · Order · + Baru · Pelanggan**, sisanya di sidebar (hamburger).
+Mobile: bottom nav 4 item → **Beranda · Order · + Baru · Pelanggan**, sisanya di sidebar (hamburger). Kurir: **Tugas · Profil**.

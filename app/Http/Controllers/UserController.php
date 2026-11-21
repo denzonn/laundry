@@ -30,6 +30,7 @@ class UserController extends Controller
                 'total' => User::count(),
                 'owner' => User::where('role', 'owner')->count(),
                 'kasir' => User::where('role', 'kasir')->count(),
+                'kurir' => User::where('role', 'kurir')->count(),
                 'nonaktif' => User::where('aktif', false)->count(),
             ],
         ]);

@@ -33,12 +33,12 @@ class Order extends Model
 
     protected $fillable = [
         'kode', 'pelanggan_id', 'user_id', 'parfum_id', 'tanggal_masuk', 'estimasi_selesai', 'tanggal_diambil',
-        'status', 'subtotal', 'diskon', 'biaya_antar', 'total', 'dibayar', 'status_bayar', 'catatan', 'alasan_batal',
+        'status', 'subtotal', 'diskon', 'biaya_antar', 'poin_ditukar', 'potongan_poin', 'total', 'dibayar', 'status_bayar', 'catatan', 'alasan_batal',
     ];
 
     protected $casts = [
         'tanggal_masuk' => 'datetime', 'estimasi_selesai' => 'datetime', 'tanggal_diambil' => 'datetime',
-        'subtotal' => 'integer', 'diskon' => 'integer', 'biaya_antar' => 'integer', 'total' => 'integer', 'dibayar' => 'integer',
+        'subtotal' => 'integer', 'diskon' => 'integer', 'biaya_antar' => 'integer', 'poin_ditukar' => 'integer', 'potongan_poin' => 'integer', 'total' => 'integer', 'dibayar' => 'integer',
     ];
 
     protected $appends = ['sisa'];
@@ -89,6 +89,11 @@ class Order extends Model
     public function pembayaran(): HasMany
     {
         return $this->hasMany(Pembayaran::class)->latest('id');
+    }
+
+    public function pengiriman(): HasMany
+    {
+        return $this->hasMany(Pengiriman::class)->latest('jadwal');
     }
 
     /** Belum selesai dikerjakan padahal estimasi sudah lewat. */
@@ -149,6 +154,24 @@ class Order extends Model
         $this->save();
 
         $this->logs()->create(['user_id' => $user->id, 'status' => $status, 'catatan' => $catatan]);
+
+        // poin member: dapat saat diambil (pasti lunas), refund poin yang ditukar saat batal
+        if ($status === 'diambil') {
+            $this->beriPoin();
+        } elseif ($status === 'batal' && $this->poin_ditukar) {
+            $this->pelanggan->mutasiPoin('batal', $this->poin_ditukar, $this, "Refund, {$this->kode} dibatalkan");
+        }
+    }
+
+    /** floor(total / rupiah_per_poin), hanya bila program poin aktif & belum pernah diberikan untuk order ini. */
+    public function beriPoin(): void
+    {
+        $toko = Pengaturan::toko();
+        $poin = $toko->poin_aktif ? intdiv($this->total, max(1, $toko->rupiah_per_poin)) : 0;
+
+        if ($poin > 0 && ! RiwayatPoin::where('order_id', $this->id)->where('jenis', 'dapat')->exists()) {
+            $this->pelanggan->mutasiPoin('dapat', $poin, $this, "Order {$this->kode}");
+        }
     }
 
     public function bayar(int $jumlah, int $metodeId, User $user, ?string $catatan = null): Pembayaran

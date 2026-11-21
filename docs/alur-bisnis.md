@@ -16,6 +16,28 @@ Aturan transisi status:
 - Setiap perubahan → 1 baris `order_status_logs`.
 - Saat jadi `siap_diambil` → tampilkan tombol "Kirim WA: laundry selesai".
 
+## Member & Poin (opsional, default mati)
+
+Diatur di Pengaturan Toko: `poin_aktif`, `rupiah_per_poin` (default 10.000), `nilai_poin` (default 100).
+
+- **Dapat**: saat order jadi `diambil` (pasti lunas) → `floor(total / rupiah_per_poin)` poin, sekali per order (`Order::beriPoin`, dipanggil di `ubahStatus`).
+- **Tukar**: di Order Baru, maks `min(saldo, floor((subtotal − diskon) / nilai_poin))`. Server menghitung `potongan_poin = poin_ditukar × nilai_poin` dan mengurangi saldo dalam transaksi yang sama.
+- **Batal**: order batal → poin yang ditukar dikembalikan (riwayat `batal`). Poin yang sudah didapat tidak berubah (order `diambil` tidak bisa dibatalkan).
+- Saldo hanya diubah lewat `Pelanggan::mutasiPoin()` (lock + baris `riwayat_poin`).
+
+## Antar / Jemput
+
+```
+Detail Order → Jadwalkan (jemput/antar, alamat, jadwal, kurir)
+   dijadwalkan → dalam_perjalanan → selesai
+        ↘────────── batal (owner/kasir) ─╯ (sebelum selesai)
+```
+
+- Kurir melihat tugasnya di **Tugas Saya** (hari ini / besok / nanti), tombol Maps, telepon/WA pelanggan, sisa tagihan.
+- Kurir hanya boleh mengubah status tugas miliknya (selain itu 403) dan tidak bisa membatalkan.
+- `pengiriman.biaya` hanya info ongkos; yang ditagih tetap `orders.biaya_antar`.
+- Kurir tidak mencatat pembayaran: uang tunai diserahkan ke kasir, kasir yang mencatat di Detail Order.
+
 ## Pembayaran
 
 - `status_bayar` dihitung: `dibayar = 0` → `belum`, `0 < dibayar < total` → `dp`, `dibayar >= total` → `lunas`.
@@ -27,7 +49,9 @@ Aturan transisi status:
 ```
 subtotal item   = harga × qty            (qty kg boleh desimal, mis. 3.5)
 subtotal order  = Σ subtotal item
-total           = subtotal − diskon + biaya_antar   (diskon ≤ subtotal)
+potongan_poin   = poin_ditukar × nilai_poin         (0 bila tidak tukar poin)
+total           = subtotal − diskon − potongan_poin + biaya_antar
+                  (diskon ≤ subtotal, potongan_poin ≤ subtotal − diskon → total ≥ biaya_antar)
 estimasi        = tanggal_masuk + max(durasi_jam layanan)
 ```
 
@@ -35,10 +59,13 @@ Opsional (tanyakan ke user sebelum dibuat): minimal berat kiloan (mis. min 2 kg)
 
 ## Hak Akses
 
-| Aksi | Owner | Kasir |
-|---|---|---|
-| Buat order, update status, terima pembayaran | ✓ | ✓ |
-| Kelola pelanggan | ✓ | ✓ |
-| Batalkan order, ubah harga item order | ✓ | ✗ |
-| Master layanan/parfum/metode bayar | ✓ | ✗ |
-| Laporan, pengeluaran, pengaturan, user | ✓ | ✗ |
+| Aksi | Owner | Kasir | Kurir |
+|---|---|---|---|
+| Buat order, update status, terima pembayaran, tukar poin | ✓ | ✓ | ✗ |
+| Kelola pelanggan | ✓ | ✓ | ✗ |
+| Jadwalkan / tugaskan / batalkan antar-jemput | ✓ | ✓ | ✗ |
+| Lihat & ubah status tugas antar-jemput miliknya (Tugas Saya) | ✗ | ✗ | ✓ |
+| Batalkan order, ubah harga item order | ✓ | ✗ | ✗ |
+| Master layanan/parfum/metode bayar | ✓ | ✗ | ✗ |
+| Laporan, pengeluaran, pengaturan, user | ✓ | ✗ | ✗ |
+| Profil sendiri | ✓ | ✓ | ✓ |

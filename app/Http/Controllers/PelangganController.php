@@ -24,6 +24,8 @@ class PelangganController extends Controller
             'jumlah' => $pelanggan->orders()->where('status', '!=', 'batal')->count(),
             'total' => (int) $pelanggan->orders()->where('status', '!=', 'batal')->sum('total'),
             'data' => $pelanggan->orders()->latest('id')->limit(5)->get(['id', 'kode', 'status', 'status_bayar', 'total', 'tanggal_masuk']),
+            'poin' => $pelanggan->poin,
+            'riwayat_poin' => $pelanggan->riwayatPoin()->limit(5)->get(['jenis', 'poin', 'saldo_setelah', 'keterangan', 'created_at']),
         ]);
     }
 

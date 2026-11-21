@@ -12,6 +12,8 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public const ROLE = ['owner', 'kasir', 'kurir'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -61,5 +63,15 @@ class User extends Authenticatable
     public function isOwner(): bool
     {
         return $this->role === 'owner';
+    }
+
+    public function isKurir(): bool
+    {
+        return $this->role === 'kurir';
+    }
+
+    public function scopeKurirAktif($q)
+    {
+        return $q->where('role', 'kurir')->where('aktif', true)->orderBy('name');
     }
 }

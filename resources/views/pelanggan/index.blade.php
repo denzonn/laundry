@@ -164,7 +164,17 @@
                             <span><span class="block font-mono text-xs text-slate-500">${esc(o.kode)}</span>${badgeOrder(o.status)}</span>
                             <span class="text-right text-sm font-semibold text-slate-700">${formatRupiah(o.total)}<span class="block">${badgeOrder(o.status_bayar)}</span></span>
                         </a>`).join('');
+                    const poin = res.poin || res.riwayat_poin.length ? `
+                        <div class="mb-2 rounded-lg bg-amber-50 p-2">
+                            <p class="flex items-center justify-between text-sm"><span class="font-medium text-amber-700"><i class="fa-solid fa-star mr-1"></i> Poin member</span><b class="text-lg text-amber-700">${res.poin}</b></p>
+                            ${res.riwayat_poin.map(r => `
+                                <p class="flex justify-between gap-2 border-t border-amber-100 pt-1 text-[11px] text-slate-500">
+                                    <span class="truncate">${esc(r.keterangan || r.jenis)} · ${formatTanggalIndo(r.created_at)}</span>
+                                    <b class="shrink-0 ${r.poin < 0 ? 'text-red-600' : 'text-emerald-600'}">${r.poin > 0 ? '+' : ''}${r.poin}</b>
+                                </p>`).join('')}
+                        </div>` : '';
                     $('.riwayat-order').html(`
+                        ${poin}
                         <div class="mb-2 grid grid-cols-2 gap-2 text-center">
                             <div class="rounded-lg bg-white p-2"><p class="text-lg font-bold text-slate-800">${res.jumlah}</p><p class="text-[11px] text-slate-400">order</p></div>
                             <div class="rounded-lg bg-white p-2"><p class="text-sm font-bold text-emerald-700">${formatRupiah(res.total)}</p><p class="text-[11px] text-slate-400">total belanja</p></div>

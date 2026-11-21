@@ -11,7 +11,10 @@ class Pengaturan extends Model
     protected $fillable = [
         'nama_toko', 'alamat', 'no_hp', 'logo', 'footer_struk',
         'ukuran_struk', 'template_wa_masuk', 'template_wa_selesai',
+        'poin_aktif', 'rupiah_per_poin', 'nilai_poin',
     ];
+
+    protected $casts = ['poin_aktif' => 'boolean', 'rupiah_per_poin' => 'integer', 'nilai_poin' => 'integer'];
 
     /** Satu-satunya baris pengaturan toko, dibuat otomatis bila belum ada. */
     public static function toko(): self

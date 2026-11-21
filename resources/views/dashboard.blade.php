@@ -29,6 +29,15 @@
         </a>
     @endif
 
+    {{-- ANTAR-JEMPUT HARI INI (termasuk yang terlewat) --}}
+    @if ($antarJemput)
+        <a href="{{ route('pengiriman') }}" class="mb-4 flex min-h-[44px] items-center gap-3 rounded-2xl border border-sky-200 bg-sky-50 px-4 py-2.5 text-sm text-sky-800 hover:bg-sky-100">
+            <i class="fa-solid fa-motorcycle shrink-0 text-sky-500"></i>
+            <span class="min-w-0 flex-1 truncate"><b>{{ $antarJemput }} antar/jemput</b> belum selesai hari ini</span>
+            <i class="fa-solid fa-chevron-right shrink-0 text-xs text-sky-400"></i>
+        </a>
+    @endif
+
     {{-- SAPAAN --}}
     <div class="flex items-end justify-between gap-3">
         <div class="min-w-0">

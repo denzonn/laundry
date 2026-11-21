@@ -8,6 +8,7 @@ use App\Models\MetodePembayaran;
 use App\Models\Order;
 use App\Models\Parfum;
 use App\Models\Pengaturan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -51,6 +52,7 @@ class OrderController extends Controller
             'layanan' => Layanan::where('aktif', true)->orderBy('kategori')->orderBy('harga')->get(),
             'parfum' => Parfum::where('aktif', true)->orderBy('nama')->get(),
             'metode' => MetodePembayaran::where('aktif', true)->orderBy('id')->get(),
+            'toko' => Pengaturan::toko(),
         ]);
     }
 
@@ -73,10 +75,14 @@ class OrderController extends Controller
 
             $subtotal = $items->sum('subtotal');
             $diskon = (int) ($data['diskon'] ?? 0);
-            $total = $subtotal - $diskon + (int) ($data['biaya_antar'] ?? 0);
+            $poin = (int) ($data['poin_ditukar'] ?? 0);
+            $potongan = $poin * Pengaturan::toko()->nilai_poin;
+            $total = $subtotal - $diskon - $potongan + (int) ($data['biaya_antar'] ?? 0);
             $bayar = (int) ($data['bayar'] ?? 0);
 
             throw_if($diskon > $subtotal, ValidationException::withMessages(['diskon' => 'Diskon tidak boleh melebihi subtotal.']));
+            throw_if($poin && ! Pengaturan::toko()->poin_aktif, ValidationException::withMessages(['poin_ditukar' => 'Program poin sedang tidak aktif.']));
+            throw_if($potongan > $subtotal - $diskon, ValidationException::withMessages(['poin_ditukar' => 'Potongan poin melebihi subtotal setelah diskon.']));
             throw_if($bayar > $total, ValidationException::withMessages(['bayar' => 'Pembayaran melebihi total tagihan.']));
             throw_if($bayar > 0 && empty($data['metode_pembayaran_id']), ValidationException::withMessages(['metode_pembayaran_id' => 'Pilih metode pembayaran.']));
 
@@ -90,10 +96,16 @@ class OrderController extends Controller
                 'subtotal' => $subtotal,
                 'diskon' => $diskon,
                 'biaya_antar' => (int) ($data['biaya_antar'] ?? 0),
+                'poin_ditukar' => $poin,
+                'potongan_poin' => $potongan,
                 'total' => $total,
                 'status_bayar' => Order::statusBayar(0, $total),
                 'catatan' => $data['catatan'] ?? null,
             ]);
+
+            if ($poin) {
+                $order->pelanggan->mutasiPoin('tukar', -$poin, $order, "Tukar di {$order->kode}"); // lock + cek saldo
+            }
 
             $order->items()->createMany($items);
             $order->logs()->create(['user_id' => $request->user()->id, 'status' => 'antrian', 'catatan' => 'Order dibuat']);
@@ -113,11 +125,12 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['pelanggan', 'parfum', 'user:id,name', 'items', 'logs.user:id,name', 'pembayaran.metode', 'pembayaran.user:id,name']);
+        $order->load(['pelanggan', 'parfum', 'user:id,name', 'items', 'logs.user:id,name', 'pembayaran.metode', 'pembayaran.user:id,name', 'pengiriman.kurir:id,name']);
 
         return view('order.show', [
             'order' => $order,
             'metode' => MetodePembayaran::where('aktif', true)->orderBy('id')->get(),
+            'kurir' => User::kurirAktif()->get(['id', 'name']),
         ]);
     }
 

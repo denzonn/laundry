@@ -11,6 +11,7 @@ use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -30,21 +31,31 @@ Route::middleware('auth')->group(function () {
     Route::put('profil', [ProfilController::class, 'update'])->name('profil.update');
     Route::put('profil/password', [ProfilController::class, 'password'])->name('profil.password');
 
-    Route::get('pelanggan', [PelangganController::class, 'index'])->name('pelanggan');
-    Route::get('pelanggan/data', [PelangganController::class, 'data'])->name('pelanggan.data');
-    Route::post('pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
-    Route::put('pelanggan/{pelanggan}', [PelangganController::class, 'update'])->name('pelanggan.update');
-    Route::delete('pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
-    Route::get('pelanggan/{pelanggan}/orders', [PelangganController::class, 'orders'])->name('pelanggan.orders');
+    // kurir hanya: dashboard (dialihkan ke tugas), profil, tugas, logout
+    Route::middleware('role:owner,kasir')->group(function () {
+        Route::get('pelanggan', [PelangganController::class, 'index'])->name('pelanggan');
+        Route::get('pelanggan/data', [PelangganController::class, 'data'])->name('pelanggan.data');
+        Route::post('pelanggan', [PelangganController::class, 'store'])->name('pelanggan.store');
+        Route::put('pelanggan/{pelanggan}', [PelangganController::class, 'update'])->name('pelanggan.update');
+        Route::delete('pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
+        Route::get('pelanggan/{pelanggan}/orders', [PelangganController::class, 'orders'])->name('pelanggan.orders');
 
-    Route::get('order', [OrderController::class, 'index'])->name('order');
-    Route::get('order/data', [OrderController::class, 'data'])->name('order.data');
-    Route::get('order/baru', [OrderController::class, 'create'])->name('order.create');
-    Route::post('order', [OrderController::class, 'store'])->name('order.store');
-    Route::get('order/{order}', [OrderController::class, 'show'])->name('order.show');
-    Route::get('order/{order}/struk', [OrderController::class, 'struk'])->name('order.struk');
-    Route::patch('order/{order}/status', [OrderController::class, 'status'])->name('order.status');
-    Route::post('order/{order}/bayar', [OrderController::class, 'bayar'])->name('order.bayar');
+        Route::get('order', [OrderController::class, 'index'])->name('order');
+        Route::get('order/data', [OrderController::class, 'data'])->name('order.data');
+        Route::get('order/baru', [OrderController::class, 'create'])->name('order.create');
+        Route::post('order', [OrderController::class, 'store'])->name('order.store');
+        Route::get('order/{order}', [OrderController::class, 'show'])->name('order.show');
+        Route::get('order/{order}/struk', [OrderController::class, 'struk'])->name('order.struk');
+        Route::patch('order/{order}/status', [OrderController::class, 'status'])->name('order.status');
+        Route::post('order/{order}/bayar', [OrderController::class, 'bayar'])->name('order.bayar');
+
+        Route::get('pengiriman', [PengirimanController::class, 'index'])->name('pengiriman');
+        Route::post('order/{order}/pengiriman', [PengirimanController::class, 'store'])->name('pengiriman.store');
+        Route::put('pengiriman/{pengiriman}', [PengirimanController::class, 'update'])->name('pengiriman.update');
+    });
+
+    Route::get('tugas', [PengirimanController::class, 'tugas'])->middleware('role:kurir')->name('tugas');
+    Route::patch('pengiriman/{pengiriman}/status', [PengirimanController::class, 'status'])->name('pengiriman.status'); // kurir: hanya tugasnya
 
     Route::middleware('role:owner')->group(function () {
         Route::get('layanan', [LayananController::class, 'index'])->name('layanan');

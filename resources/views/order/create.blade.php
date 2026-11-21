@@ -143,6 +143,24 @@
                             <input id="biayaAntar" inputmode="numeric" placeholder="0" class="money {{ $money }} border-slate-700 bg-slate-800 text-white">
                         </div>
                     </div>
+                    @if ($toko->poin_aktif)
+                        {{-- tampil bila pelanggan punya poin; batas & potongan final dihitung ulang di server --}}
+                        <div id="rowPoin" class="hidden rounded-xl bg-amber-400/10 p-3 ring-1 ring-amber-400/30">
+                            <div class="flex items-center justify-between gap-3">
+                                <label for="poinDitukar" class="text-amber-200">
+                                    <i class="fa-solid fa-star mr-1"></i> Tukar poin
+                                    <span class="block text-xs text-slate-400">Saldo <b id="poinSaldo">0</b> · maks <b id="poinMaks">0</b></span>
+                                </label>
+                                <input id="poinDitukar" inputmode="numeric" placeholder="0"
+                                    class="h-11 w-24 rounded-xl border-slate-700 bg-slate-800 text-right text-base font-semibold text-white md:text-sm">
+                            </div>
+                            <div class="mt-1 flex items-center justify-between text-xs">
+                                <button type="button" id="poinMaksBtn" class="h-9 font-semibold text-amber-300">Pakai maksimal</button>
+                                <span id="potonganPoin" class="font-semibold text-amber-200">- Rp. 0</span>
+                            </div>
+                        </div>
+                        <p class="err text-right text-xs text-red-400" data-for="poin_ditukar"></p>
+                    @endif
                 </div>
 
                 <div class="flex items-end justify-between border-t border-dashed border-slate-700 pt-4">
@@ -213,6 +231,7 @@
         const LAYANAN = Object.fromEntries(@json($layanan).map(l => [l.id, l]));
         const keranjang = new Map(); // layanan_id → qty
         let pelanggan = null, estimasiManual = false;
+        const NILAI_POIN = {{ $toko->poin_aktif ? $toko->nilai_poin : 0 }}; // 0 = program poin nonaktif
 
         const money = (sel) => getNominal($(sel).val());
         const stepOf = (l) => l.kategori === 'kiloan' || l.satuan === 'm²' ? 0.5 : 1;
@@ -229,6 +248,8 @@
             $('#pelangganCari').addClass('hidden');
             $('#hasilPelanggan').addClass('hidden');
             $('.err[data-for=pelanggan_id]').text('');
+            $('#poinDitukar').val('');
+            render(false);
         }
 
         function gantiPelanggan() {
@@ -236,6 +257,7 @@
             $('#pelangganTerpilih').addClass('hidden').removeClass('flex');
             $('#pelangganCari').removeClass('hidden');
             $('#cariPelanggan').val('').trigger('focus');
+            render(false);
         }
 
         let hasil = [];
@@ -325,7 +347,19 @@
                     </div>`);
             }
 
-            const total = Math.max(0, subtotal - money('#diskon')) + money('#biayaAntar');
+            const setelahDiskon = Math.max(0, subtotal - money('#diskon'));
+            const saldoPoin = pelanggan?.poin || 0;
+            const maksPoin = NILAI_POIN ? Math.min(saldoPoin, Math.floor(setelahDiskon / NILAI_POIN)) : 0;
+            const poin = Math.min(toNumber(String($('#poinDitukar').val() ?? '').replace(/\D/g, '')) || 0, maksPoin);
+            if (NILAI_POIN) {
+                $('#poinDitukar').val(poin || '');
+                $('#rowPoin').toggleClass('hidden', saldoPoin < 1);
+                $('#poinSaldo').text(saldoPoin);
+                $('#poinMaks').text(maksPoin);
+                $('#potonganPoin').text('- ' + formatRupiah(poin * NILAI_POIN));
+            }
+            const total = setelahDiskon - poin * NILAI_POIN + money('#biayaAntar');
+            render.poin = poin;
             $('#subtotal').text(formatRupiah(subtotal));
             $('#total, #totalBar').text(formatRupiah(total));
             $('#jumlahItem').text(keranjang.size);
@@ -343,6 +377,9 @@
             this.value = this.value ? formatRupiah(getNominal(this.value), false) : '';
             render(false);
         });
+
+        $('#poinDitukar').on('input', () => render(false));
+        $('#poinMaksBtn').on('click', () => { $('#poinDitukar').val(999999); render(false); });
 
         $('#estimasi').on('input', function () {
             estimasiManual = true;
@@ -367,6 +404,7 @@
                 parfum_id: $('[name=parfum_id]:checked').val() ?? '',
                 items: [...keranjang].map(([layanan_id, qty]) => ({ layanan_id, qty })),
                 diskon: money('#diskon'),
+                poin_ditukar: render.poin || 0,
                 biaya_antar: money('#biayaAntar'),
                 catatan: $('#catatan').val(),
                 bayar: mode === 'lunas' ? render.total : (mode === 'dp' ? money('#jumlahDp') : 0),

@@ -7,13 +7,14 @@ Tabel bawaan Laravel (`sessions`, `cache`, `jobs`, `password_reset_tokens`) tida
 | kolom | tipe | catatan |
 |---|---|---|
 | name, email, password | bawaan | |
-| role | enum(`owner`,`kasir`) | default `kasir` |
+| role | enum(`owner`,`kasir`,`kurir`) | default `kasir` (`kurir` sejak Fase 7b) |
 | no_hp | string null | |
 | foto | string null | path storage |
 | aktif | boolean | default true |
 
 ## pengaturan (Fase 1) — 1 baris saja
-nama_toko, alamat, no_hp, logo, footer_struk, ukuran_struk (`58`/`80`), template_wa_masuk, template_wa_selesai
+nama_toko, alamat, no_hp, logo, footer_struk, ukuran_struk (`58`/`80`), template_wa_masuk, template_wa_selesai,
+poin_aktif boolean (default false), rupiah_per_poin unsignedInteger (default 10000), nilai_poin unsignedInteger (default 100) — Fase 7b
 
 ## layanan (Fase 2)
 | kolom | tipe | catatan |
@@ -26,7 +27,7 @@ nama_toko, alamat, no_hp, logo, footer_struk, ukuran_struk (`58`/`80`), template
 | aktif | boolean | |
 
 ## pelanggan (Fase 2)
-nama, no_hp (unique, dinormalisasi `62xxx` oleh mutator `Pelanggan::setNoHpAttribute`), alamat null, catatan null
+nama, no_hp (unique, dinormalisasi `62xxx` oleh mutator `Pelanggan::setNoHpAttribute`), alamat null, catatan null, poin unsignedInteger default 0 (Fase 7b, hanya diubah lewat `Pelanggan::mutasiPoin()`)
 
 ## parfum (Fase 2)
 nama, aktif
@@ -48,7 +49,9 @@ nama (Tunai/Transfer/QRIS), aktif
 | subtotal | unsignedBigInteger | Σ item |
 | diskon | unsignedBigInteger | default 0 |
 | biaya_antar | unsignedBigInteger | default 0 |
-| total | unsignedBigInteger | subtotal − diskon + biaya_antar |
+| poin_ditukar | unsignedInteger | default 0 (Fase 7b) |
+| potongan_poin | unsignedBigInteger | default 0, = poin_ditukar × nilai_poin saat order dibuat |
+| total | unsignedBigInteger | subtotal − diskon − potongan_poin + biaya_antar |
 | dibayar | unsignedBigInteger | Σ pembayaran (cache) |
 | status_bayar | enum(`belum`,`dp`,`lunas`) | diturunkan dari dibayar vs total |
 | catatan | text null | |
@@ -77,11 +80,17 @@ order_id FK, metode_pembayaran_id FK, user_id FK, jumlah, tanggal, catatan null
 
 > Stok hanya diubah lewat `Bahan::mutasi()` (transaksi + `lockForUpdate`, keluar tidak boleh membuat stok minus), supaya selalu ada jejak di mutasi_bahan.
 
+## riwayat_poin & pengiriman (Fase 7b)
+- riwayat_poin: pelanggan_id FK cascade, order_id FK null (nullOnDelete), jenis enum(`dapat`,`tukar`,`batal`), poin int (bertanda: tukar negatif), saldo_setelah unsignedInteger, keterangan null
+- pengiriman: order_id FK cascade, jenis enum(`jemput`,`antar`), kurir_id FK users null (restrictOnDelete), alamat string, jadwal datetime (index), status enum(`dijadwalkan`,`dalam_perjalanan`,`selesai`,`batal`) default `dijadwalkan`, biaya unsignedBigInteger default 0 (info, yang ditagih `orders.biaya_antar`), catatan null, selesai_at null
+
 ## Relasi
 ```
 pelanggan 1─* orders 1─* order_items *─1 layanan
                     1─* pembayaran *─1 metode_pembayaran
                     1─* order_status_logs
+                    1─* pengiriman *─1 users (kurir)
+pelanggan 1─* riwayat_poin *─1 orders (null)
 users 1─* orders / pembayaran / pengeluaran / mutasi_bahan
 bahan 1─* mutasi_bahan
 ```
