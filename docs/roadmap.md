@@ -11,14 +11,16 @@ Referensi: [database.md](database.md) · [alur-bisnis.md](alur-bisnis.md) · [ui
 
 Tujuan: login → dashboard kosong jalan tanpa error.
 
-- [ ] Hapus route Breeze yang controllernya tidak ada di `routes/auth.php` (sisakan login & logout)
-- [ ] Hapus test Breeze yang tidak relevan (`tests/Feature/Auth/*` kecuali Authentication, `ProfileTest`)
-- [ ] Buat route + view `dashboard` (placeholder)
-- [ ] Ganti sidebar HRIS → menu laundry (lihat struktur menu di bawah)
-- [ ] Navbar: nama & role dari `auth()->user()`, hapus notifikasi hardcode
-- [ ] Footer & logo: "Base Project / HRIS" → nama laundry (dari `config('app.name')`)
-- [ ] Hapus double load jQuery
-- [ ] `.env`: `APP_NAME`, `APP_LOCALE=id`, `APP_FAKER_LOCALE=id_ID`, `DB_DATABASE=laundry`
+- [x] Hapus route Breeze yang controllernya tidak ada di `routes/auth.php` (sisakan login & logout)
+- [x] Hapus test Breeze yang tidak relevan (`tests/Feature/Auth/*` kecuali Authentication, `ProfileTest`)
+- [x] Buat route + view `dashboard` (placeholder)
+- [x] Ganti sidebar HRIS → menu laundry (lihat struktur menu di bawah)
+- [x] Navbar: nama & role dari `auth()->user()`, hapus notifikasi hardcode
+- [x] Footer & logo: "Base Project / HRIS" → nama laundry (dari `config('app.name')`)
+- [x] Hapus double load jQuery
+- [x] `.env`: `APP_NAME`, `APP_LOCALE=id`, `APP_FAKER_LOCALE=id_ID`, `DB_DATABASE=laundry`
+- [x] `phpunit.xml` pakai sqlite `:memory:` (sebelumnya test akan menghapus DB MySQL)
+- [x] Login view memakai `layouts.auth` yang tidak ada → `landing.blade.php` di-rename jadi `auth.blade.php`
 
 **Selesai bila**: login sukses → dashboard, `php artisan test` hijau.
 

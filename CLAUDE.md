@@ -70,12 +70,12 @@ Target utama: kasir pakai **HP & tablet** di meja laundry. Desktop tetap rapi. D
 - Otorisasi role via middleware `role:owner,kasir` (lihat Fase 1 roadmap).
 - Setiap fitur yang ada logika uang/status wajib ada minimal 1 Pest feature test.
 
-## Catatan Kondisi Base Project (sisa template HRIS)
+## Menu Sidebar
 
-Belum dibersihkan, lihat Fase 0 di roadmap:
-- [routes/auth.php](routes/auth.php) memanggil controller Breeze yang tidak ada (Register, Password, Verify, dll). Hanya `AuthenticatedSessionController` yang ada.
-- Route `dashboard` belum ada, padahal login redirect ke sana.
-- [sidebar.blade.php](resources/views/includes/sidebar.blade.php) masih menu HRIS (`otoritas_id`, cabang, payroll, dll).
-- [navbar.blade.php](resources/views/includes/navbar.blade.php) nama user & role masih hardcode; pakai `auth()->user()->foto` yang belum ada kolomnya.
-- Tests di `tests/Feature/Auth` untuk fitur Breeze yang tidak ada.
-- `jquery` di-load 2x (style.blade.php 3.6.0 & script.blade.php 3.7.1).
+Menu didefinisikan sebagai array di [sidebar.blade.php](resources/views/includes/sidebar.blade.php): `[nama_route, label, ikon]`.
+Item hanya tampil bila route-nya sudah terdaftar (`Route::has`), jadi cukup buat route dengan nama yang sama.
+
+## Testing
+
+`phpunit.xml` memakai sqlite `:memory:`, jadi aman dari DB MySQL. Jangan dihapus, karena `RefreshDatabase` menghapus isi database.
+Login seeder: `test@example.com` / `password`.

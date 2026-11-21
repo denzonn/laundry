@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Login - Acas HRIS')
+@section('title', 'Login - ' . config('app.name'))
 
 @section('content')
     <div class="min-h-screen bg-slate-100">
@@ -40,11 +40,11 @@
                         <div>
 
                             <h1 class="text-4xl font-bold tracking-tight text-white">
-                                Acas Variasi
+                                {{ config('app.name') }}
                             </h1>
 
                             <p class="mt-1 text-red-100">
-                                Human Resource Information System
+                                Laundry Management System
                             </p>
 
                         </div>
@@ -57,7 +57,7 @@
 
                         <h2 class="max-w-xl text-6xl font-extrabold leading-tight text-white">
 
-                            Kelola SDM
+                            Kelola Laundry
                             <br>
                             Lebih Mudah.
 
@@ -65,9 +65,9 @@
 
                         <p class="mt-7 max-w-lg text-lg leading-8 text-red-100">
 
-                            Platform internal Acas Variasi untuk membantu
-                            pengelolaan data karyawan, absensi, cuti,
-                            payroll, serta administrasi perusahaan
+                            Sistem kasir laundry untuk mencatat order,
+                            status cucian, pembayaran, pelanggan,
+                            dan laporan keuangan
                             secara cepat dan efisien.
 
                         </p>
@@ -81,14 +81,14 @@
 
                             <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
 
-                                <i class="fa-solid fa-users text-white"></i>
+                                <i class="fa-solid fa-receipt text-white"></i>
 
                             </div>
 
                             <div>
 
                                 <p class="font-semibold text-white">
-                                    Data Karyawan
+                                    Order & Status
                                 </p>
 
                                 <p class="text-sm text-red-100">
@@ -104,18 +104,18 @@
 
                             <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
 
-                                <i class="fa-solid fa-calendar-check text-white"></i>
+                                <i class="fa-solid fa-shirt text-white"></i>
 
                             </div>
 
                             <div>
 
                                 <p class="font-semibold text-white">
-                                    Absensi
+                                    Pelanggan
                                 </p>
 
                                 <p class="text-sm text-red-100">
-                                    Presensi Digital
+                                    Riwayat Lengkap
                                 </p>
 
                             </div>
@@ -134,7 +134,7 @@
                             <div>
 
                                 <p class="font-semibold text-white">
-                                    Payroll
+                                    Pembayaran
                                 </p>
 
                                 <p class="text-sm text-red-100">
@@ -175,7 +175,7 @@
                         <div>
 
                             <h3 class="text-3xl font-bold text-white">
-                                HRIS
+                                Laundry
                             </h3>
 
                             <p class="text-red-100">
@@ -218,7 +218,7 @@
                         class="rounded-[32px]
                             border border-white/60
                             bg-white/90
-                            p-10
+                            p-6 sm:p-10
                             shadow-[0_25px_70px_rgba(0,0,0,0.08)]
                             backdrop-blur-xl">
 
@@ -238,7 +238,7 @@
                             <span
                                 class="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-red-700">
 
-                                ACAS HRIS
+                                {{ config('app.name') }}
 
                             </span>
 
@@ -408,7 +408,7 @@
                             © {{ date('Y') }}
                             <span class="font-semibold text-slate-700">
 
-                                Acas Variasi
+                                {{ config('app.name') }}
 
                             </span>
 
@@ -416,7 +416,7 @@
 
                         <p class="mt-1 text-xs text-slate-400">
 
-                            Human Resource Information System
+                            Laundry Management System
 
                         </p>
 

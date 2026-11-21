@@ -48,7 +48,7 @@
                     h-[72px]
                     bg-white
                     border-b border-slate-200
-                    px-8
+                    px-4 lg:px-8
                     flex items-center justify-between">
 
                 <div class="flex items-center gap-4">
@@ -65,7 +65,7 @@
                             @yield('page_title')
                         </h1>
 
-                        <p class="text-sm text-slate-400">
+                        <p class="hidden md:block text-sm text-slate-400">
                             @yield('page_description')
                         </p>
 
@@ -93,7 +93,7 @@
                     <div>
 
                         <h5 class="text-sm font-semibold text-slate-700">
-                            Base Project
+                            {{ config('app.name') }}
                         </h5>
 
                         <p class="text-xs text-slate-400">
@@ -105,7 +105,7 @@
                     <div class="text-right">
 
                         <p class="text-sm text-slate-500">
-                            Base Project
+                            {{ config('app.name') }}
                         </p>
 
                         <p class="text-xs text-slate-400">
