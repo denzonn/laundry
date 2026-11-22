@@ -33,6 +33,10 @@
             <i class="fa-solid fa-user-pen w-5"></i>
             Profil Saya
         </a>
+        <a href="{{ route('download') }}" class="h-11 px-5 text-slate-600 hover:bg-slate-50 flex items-center gap-3">
+            <i class="fa-solid fa-mobile-screen-button w-5"></i>
+            Pasang Aplikasi
+        </a>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button class="w-full h-11 text-left px-5 text-red-600 hover:bg-red-50 flex items-center gap-3">

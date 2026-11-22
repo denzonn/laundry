@@ -97,8 +97,12 @@
                     </button>
                 </form>
 
+                <a href="{{ route('download') }}" class="mt-6 flex h-11 items-center justify-center gap-2 rounded-xl bg-primary/5 text-sm font-medium text-primary hover:bg-primary/10">
+                    <i class="fa-solid fa-mobile-screen-button"></i> Download aplikasi ke HP
+                </a>
+
                 @if (Route::has('lacak'))
-                    <a href="{{ route('lacak') }}" class="mt-6 flex h-11 items-center justify-center gap-2 rounded-xl border border-dashed border-slate-200 text-sm text-slate-500 hover:border-primary hover:text-primary">
+                    <a href="{{ route('lacak') }}" class="mt-3 flex h-11 items-center justify-center gap-2 rounded-xl border border-dashed border-slate-200 text-sm text-slate-500 hover:border-primary hover:text-primary">
                         <i class="fa-solid fa-magnifying-glass-location"></i> Lacak cucian tanpa login
                     </a>
                 @endif

@@ -53,3 +53,8 @@ it('shows public lacak page without login, masked and without phone', function (
     $this->get('/lacak')->assertOk();
     $this->get('/lacak/LND-000000-9999')->assertNotFound()->assertSee('Order tidak ditemukan');
 });
+
+it('shows public download page with install instructions', function () {
+    $this->get('/download')->assertOk()
+        ->assertSee('Download Aplikasi')->assertSee('Tambah ke Layar Utama')->assertSee('manifest.webmanifest');
+});

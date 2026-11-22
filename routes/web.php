@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard');
 
 // publik, tanpa login
+Route::view('download', 'download')->name('download');
+
 Route::middleware('throttle:30,1')->group(function () {
     Route::get('lacak', [LacakController::class, 'index'])->name('lacak');
     Route::get('lacak/{kode}', [LacakController::class, 'show'])->name('lacak.show');
