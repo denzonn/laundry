@@ -6,7 +6,7 @@
 @section('no_bottom_nav', true)
 
 @php
-    $money = 'h-11 w-full rounded-xl border-slate-200 pl-10 text-right text-base font-semibold md:text-sm';
+    $money = 'h-11 w-full rounded-xl pl-10 focus:border-sky-300 focus:ring-sky-300/40 text-right text-base font-semibold md:text-sm';
 @endphp
 
 @section('content')
@@ -21,14 +21,14 @@
                     <span class="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs text-white">1</span> Pelanggan
                 </h3>
 
-                <div id="pelangganTerpilih" class="hidden items-center gap-3 rounded-xl bg-red-50 p-3">
+                <div id="pelangganTerpilih" class="hidden items-center gap-3 rounded-xl bg-primary/5 p-3 ring-1 ring-primary/10">
                     <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-white" id="pInisial"></span>
                     <div class="min-w-0 flex-1">
                         <p class="truncate font-semibold text-slate-800" id="pNama"></p>
                         <p class="text-sm text-slate-500" id="pHp"></p>
                         <p class="truncate text-xs text-amber-600" id="pCatatan"></p>
                     </div>
-                    <button type="button" onclick="gantiPelanggan()" class="h-10 rounded-lg px-3 text-sm font-medium text-primary hover:bg-red-100">Ganti</button>
+                    <button type="button" onclick="gantiPelanggan()" class="h-10 rounded-lg px-3 text-sm font-medium text-primary hover:bg-primary/10">Ganti</button>
                 </div>
 
                 <div id="pelangganCari">
@@ -53,7 +53,7 @@
                             <input name="no_hp" type="tel" placeholder="No HP" class="h-11 w-full rounded-xl border-slate-200 text-base md:text-sm">
                             <p class="err mt-1 text-xs text-red-600" data-for="no_hp"></p>
                         </div>
-                        <button type="submit" class="h-11 rounded-xl bg-slate-800 text-sm font-semibold text-white">Simpan</button>
+                        <button type="submit" class="h-11 rounded-xl bg-primary text-sm font-semibold text-white hover:bg-primary_hover">Simpan</button>
                     </form>
                 </div>
             </section>
@@ -72,7 +72,7 @@
                                 class="relative rounded-xl border-2 border-slate-100 bg-slate-50 p-3 text-left transition active:scale-95 hover:border-primary/40">
                                 <p class="text-sm font-semibold leading-tight text-slate-800">{{ $l->nama }}</p>
                                 <p class="mt-1 text-xs text-slate-500">Rp {{ number_format($l->harga, 0, ',', '.') }}/{{ $l->satuan }}</p>
-                                <span class="tile-qty absolute -right-2 -top-2 hidden h-6 min-w-[24px] items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold text-white"></span>
+                                <span class="tile-qty absolute -right-2 -top-2 hidden h-6 min-w-[24px] items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-bold text-white shadow"></span>
                             </button>
                         @endforeach
                     </div>
@@ -123,24 +123,24 @@
 
         {{-- ================= KANAN: RINGKASAN ================= --}}
         <aside class="md:col-span-2">
-            <div class="space-y-4 rounded-2xl bg-slate-900 p-5 text-white md:sticky md:top-24">
-                <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400">Ringkasan</h3>
+            <div class="space-y-4 rounded-2xl bg-gradient-to-b from-primary_dark to-primary p-5 text-white shadow-xl shadow-primary/20 md:sticky md:top-24">
+                <h3 class="text-sm font-semibold uppercase tracking-wider text-sky-100/70">Ringkasan</h3>
 
                 <div class="space-y-3 text-sm">
-                    <div class="flex justify-between"><span class="text-slate-400">Subtotal</span><span id="subtotal" class="font-semibold">Rp. 0</span></div>
+                    <div class="flex justify-between"><span class="text-sky-100/70">Subtotal</span><span id="subtotal" class="font-semibold">Rp. 0</span></div>
                     <div class="grid grid-cols-2 items-center gap-3">
-                        <label class="text-slate-400">Diskon</label>
+                        <label class="text-sky-100/70">Diskon</label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">Rp</span>
-                            <input id="diskon" inputmode="numeric" placeholder="0" class="money {{ $money }} border-slate-700 bg-slate-800 text-white">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-sky-100/70">Rp</span>
+                            <input id="diskon" inputmode="numeric" placeholder="0" class="money {{ $money }} border-white/15 bg-white/10 text-white placeholder:text-sky-200/50">
                         </div>
                     </div>
                     <p class="err text-right text-xs text-red-400" data-for="diskon"></p>
                     <div class="grid grid-cols-2 items-center gap-3">
-                        <label class="text-slate-400">Antar/Jemput</label>
+                        <label class="text-sky-100/70">Antar/Jemput</label>
                         <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">Rp</span>
-                            <input id="biayaAntar" inputmode="numeric" placeholder="0" class="money {{ $money }} border-slate-700 bg-slate-800 text-white">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-sky-100/70">Rp</span>
+                            <input id="biayaAntar" inputmode="numeric" placeholder="0" class="money {{ $money }} border-white/15 bg-white/10 text-white placeholder:text-sky-200/50">
                         </div>
                     </div>
                     @if ($toko->poin_aktif)
@@ -149,10 +149,10 @@
                             <div class="flex items-center justify-between gap-3">
                                 <label for="poinDitukar" class="text-amber-200">
                                     <i class="fa-solid fa-star mr-1"></i> Tukar poin
-                                    <span class="block text-xs text-slate-400">Saldo <b id="poinSaldo">0</b> · maks <b id="poinMaks">0</b></span>
+                                    <span class="block text-xs text-sky-100/70">Saldo <b id="poinSaldo">0</b> · maks <b id="poinMaks">0</b></span>
                                 </label>
                                 <input id="poinDitukar" inputmode="numeric" placeholder="0"
-                                    class="h-11 w-24 rounded-xl border-slate-700 bg-slate-800 text-right text-base font-semibold text-white md:text-sm">
+                                    class="h-11 w-24 rounded-xl border-white/15 bg-white/10 text-right text-base font-semibold text-white md:text-sm">
                             </div>
                             <div class="mt-1 flex items-center justify-between text-xs">
                                 <button type="button" id="poinMaksBtn" class="h-9 font-semibold text-amber-300">Pakai maksimal</button>
@@ -163,18 +163,18 @@
                     @endif
                 </div>
 
-                <div class="flex items-end justify-between border-t border-dashed border-slate-700 pt-4">
-                    <span class="text-slate-400">Total</span>
+                <div class="flex items-end justify-between border-t border-dashed border-white/20 pt-4">
+                    <span class="text-sky-100/70">Total</span>
                     <span id="total" class="text-3xl font-bold">Rp. 0</span>
                 </div>
 
                 {{-- PEMBAYARAN --}}
-                <div class="space-y-3 border-t border-slate-800 pt-4">
-                    <div class="grid grid-cols-3 gap-1 rounded-xl bg-slate-800 p-1">
-                        @foreach (['nanti' => 'Bayar Nanti', 'dp' => 'DP', 'lunas' => 'Lunas'] as $val => $label)
+                <div class="space-y-3 border-t border-white/10 pt-4">
+                    <div class="grid grid-cols-3 gap-1 rounded-xl bg-white/10 p-1">
+                        @foreach (['nanti' => 'Nanti', 'dp' => 'DP', 'lunas' => 'Lunas'] as $val => $label)
                             <label class="cursor-pointer">
                                 <input type="radio" name="modeBayar" value="{{ $val }}" class="peer sr-only" @checked($val === 'nanti')>
-                                <span class="flex h-10 items-center justify-center rounded-lg text-sm font-medium text-slate-400 peer-checked:bg-white peer-checked:text-slate-900">{{ $label }}</span>
+                                <span class="flex h-10 items-center justify-center rounded-lg text-sm font-medium text-sky-100/70 peer-checked:bg-white peer-checked:text-primary">{{ $label }}</span>
                             </label>
                         @endforeach
                     </div>
@@ -184,32 +184,32 @@
                             @foreach ($metode as $m)
                                 <label class="cursor-pointer">
                                     <input type="radio" name="metode" value="{{ $m->id }}" class="peer sr-only" @checked($loop->first)>
-                                    <span class="flex h-10 items-center rounded-lg border border-slate-700 px-3 text-sm text-slate-300 peer-checked:border-emerald-400 peer-checked:bg-emerald-400/10 peer-checked:text-emerald-300">{{ $m->nama }}</span>
+                                    <span class="flex h-10 items-center rounded-lg border border-white/20 px-3 text-sm text-sky-50 peer-checked:border-white peer-checked:bg-white/15 peer-checked:text-white">{{ $m->nama }}</span>
                                 </label>
                             @endforeach
                         </div>
                         <p class="err text-xs text-red-400" data-for="metode_pembayaran_id"></p>
 
                         <div id="rowDp" class="hidden">
-                            <label class="mb-1 block text-xs text-slate-400">Jumlah DP</label>
+                            <label class="mb-1 block text-xs text-sky-100/70">Jumlah DP</label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">Rp</span>
-                                <input id="jumlahDp" inputmode="numeric" class="money {{ $money }} border-slate-700 bg-slate-800 text-white">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-sky-100/70">Rp</span>
+                                <input id="jumlahDp" inputmode="numeric" class="money {{ $money }} border-white/15 bg-white/10 text-white placeholder:text-sky-200/50">
                             </div>
                         </div>
                         <div id="rowDiterima" class="hidden">
-                            <label class="mb-1 block text-xs text-slate-400">Uang diterima (untuk hitung kembalian)</label>
+                            <label class="mb-1 block text-xs text-sky-100/70">Uang diterima (untuk hitung kembalian)</label>
                             <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">Rp</span>
-                                <input id="diterima" inputmode="numeric" class="money {{ $money }} border-slate-700 bg-slate-800 text-white">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-sky-100/70">Rp</span>
+                                <input id="diterima" inputmode="numeric" class="money {{ $money }} border-white/15 bg-white/10 text-white placeholder:text-sky-200/50">
                             </div>
-                            <p class="mt-2 flex justify-between text-sm"><span class="text-slate-400">Kembalian</span><span id="kembalian" class="font-semibold text-emerald-300">Rp. 0</span></p>
+                            <p class="mt-2 flex justify-between text-sm"><span class="text-sky-100/70">Kembalian</span><span id="kembalian" class="font-semibold text-sky-200">Rp. 0</span></p>
                         </div>
                         <p class="err text-xs text-red-400" data-for="bayar"></p>
                     </div>
                 </div>
 
-                <button type="button" onclick="simpan()" class="hidden h-12 w-full rounded-xl bg-primary font-semibold text-white hover:bg-primary_hover md:block">
+                <button type="button" onclick="simpan()" class="hidden h-12 w-full rounded-xl bg-white font-semibold text-primary shadow-lg hover:bg-sky-50 md:block">
                     <i class="fa-solid fa-check mr-2"></i> Simpan Order
                 </button>
             </div>
@@ -222,7 +222,7 @@
             <p class="text-xs text-slate-400"><span id="jumlahItem">0</span> layanan</p>
             <p class="text-lg font-bold text-slate-800" id="totalBar">Rp. 0</p>
         </div>
-        <button type="button" onclick="simpan()" class="h-12 rounded-xl bg-primary px-6 font-semibold text-white">Simpan</button>
+        <button type="button" onclick="simpan()" class="h-12 rounded-xl bg-primary px-6 font-semibold text-white shadow-lg shadow-primary/30 active:scale-95">Simpan</button>
     </div>
 @endsection
 
@@ -316,7 +316,7 @@
 
             $('[data-tile]').each(function () {
                 const q = keranjang.get(+this.dataset.tile);
-                $(this).toggleClass('border-primary bg-red-50', !!q).find('.tile-qty').toggleClass('hidden', !q).toggleClass('flex', !!q).text(q ? fmtQty(q) : '');
+                $(this).toggleClass('border-primary bg-primary/5', !!q).find('.tile-qty').toggleClass('hidden', !q).toggleClass('flex', !!q).text(q ? fmtQty(q) : '');
             });
 
             const rows = [...keranjang].map(([id, qty]) => {

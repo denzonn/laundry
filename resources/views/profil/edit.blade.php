@@ -12,7 +12,7 @@
 @section('content')
         {{-- BANNER + AVATAR --}}
         <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-            <div class="h-28 md:h-36 bg-[radial-gradient(circle_at_20%_20%,#fca5a5,transparent_50%),radial-gradient(circle_at_80%_0%,#fcd34d,transparent_45%)] bg-primary"></div>
+            <div class="h-28 md:h-36 bg-[radial-gradient(circle_at_20%_20%,#7dd3fc,transparent_50%),radial-gradient(circle_at_80%_0%,#38bdf8,transparent_45%)] bg-primary"></div>
 
             <div class="flex flex-col items-center px-5 pb-6 md:flex-row md:items-end md:gap-5">
                 <label class="relative -mt-14 cursor-pointer">

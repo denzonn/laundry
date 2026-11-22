@@ -104,7 +104,7 @@
                     @php $kunci = $s === 'diambil' && $order->status_bayar !== 'lunas'; @endphp
                     <button type="button" onclick="ubahStatus('{{ $s }}')" @disabled($kunci)
                         class="flex h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-semibold
-                            {{ $loop->first ? 'bg-slate-800 text-white hover:bg-slate-900' : 'border border-slate-200 text-slate-700 hover:bg-slate-50' }}
+                            {{ $loop->first ? 'bg-primary text-white shadow-md shadow-primary/20 hover:bg-primary_hover' : 'border border-slate-200 text-slate-700 hover:bg-slate-50' }}
                             disabled:cursor-not-allowed disabled:opacity-40"
                         title="{{ $kunci ? 'Lunasi dulu sebelum diambil' : '' }}">
                         <i class="fa-solid {{ $ikon[$s] }}"></i> Tandai {{ Order::LABEL[$s] }}

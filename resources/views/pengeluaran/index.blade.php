@@ -49,7 +49,7 @@
 
     {{-- FAB HP --}}
     <button type="button" onclick="formPengeluaran()" aria-label="Catat pengeluaran"
-        class="fixed bottom-20 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-rose-600 text-white shadow-lg shadow-rose-600/30 md:hidden">
+        class="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-rose-600 text-white shadow-lg shadow-rose-600/30 md:hidden">
         <i class="fa-solid fa-pen-to-square text-xl"></i>
     </button>
 

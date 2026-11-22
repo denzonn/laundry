@@ -349,7 +349,7 @@ document.addEventListener("keydown", function (e) {
 
 window.showToast = function (message, type = "success") {
     let isError = type === "error";
-    let bgColor = isError ? "#b91c1c" : "#057a37";
+    let bgColor = isError ? "#dc2626" : "#059669";
     let icon = isError
         ? '<i class="fa-solid fa-circle-xmark" style="font-size: 16px;"></i>'
         : '<i class="fa-solid fa-circle-check" style="font-size: 16px;"></i>';

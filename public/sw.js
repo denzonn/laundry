@@ -2,7 +2,7 @@
 // - navigasi HTML: selalu jaringan, TIDAK disimpan (data privat); offline → /offline.html
 // - /build/ (nama file ber-hash) & /icons/: cache-first
 // - selain itu (AJAX JSON, POST, storage) tidak disentuh SW
-const CACHE = 'laundry-v1';
+const CACHE = 'laundry-v2';
 const PRECACHE = ['/offline.html', '/icons/icon-192.png'];
 
 self.addEventListener('install', (e) => {

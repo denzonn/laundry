@@ -19,7 +19,7 @@
             @foreach ($tabs as $val => [$label, $icon])
                 <button type="button" data-status="{{ $val }}"
                     class="status-tab flex h-12 items-center gap-2 rounded-2xl border px-4 text-sm font-medium transition
-                        {{ $val === '' ? 'border-slate-800 bg-slate-800 text-white' : 'border-slate-200 bg-white text-slate-600' }}">
+                        {{ $val === '' ? 'border-primary bg-primary text-white shadow-md shadow-primary/20' : 'border-slate-200 bg-white text-slate-600' }}">
                     <i class="fa-solid {{ $icon }}"></i>{{ $label }}
                     <span class="count rounded-lg bg-black/10 px-1.5 text-xs" data-count="{{ $val }}">0</span>
                 </button>
@@ -75,7 +75,7 @@
             if (next === 'diambil' && o.status_bayar !== 'lunas') {
                 return `<a href="{{ url('order') }}/${o.id}" class="flex h-10 items-center rounded-xl bg-amber-500 px-3 text-xs font-semibold text-white">Lunasi & ambil</a>`;
             }
-            return `<button type="button" onclick="lanjut(${o.id}, '${next}')" class="flex h-10 items-center gap-1 rounded-xl bg-slate-800 px-3 text-xs font-semibold text-white hover:bg-slate-900">
+            return `<button type="button" onclick="lanjut(${o.id}, '${next}')" class="flex h-10 items-center gap-1 rounded-xl bg-primary px-3 text-xs font-semibold text-white hover:bg-primary_hover">
                 ${esc(LABEL_ORDER[next])} <i class="fa-solid fa-arrow-right"></i></button>`;
         }
 
@@ -137,8 +137,8 @@
         }
 
         $('.status-tab').on('click', function () {
-            $('.status-tab').removeClass('border-slate-800 bg-slate-800 text-white').addClass('border-slate-200 bg-white text-slate-600');
-            $(this).addClass('border-slate-800 bg-slate-800 text-white').removeClass('border-slate-200 bg-white text-slate-600');
+            $('.status-tab').removeClass('border-primary bg-primary text-white shadow-md shadow-primary/20').addClass('border-slate-200 bg-white text-slate-600');
+            $(this).addClass('border-primary bg-primary text-white shadow-md shadow-primary/20').removeClass('border-slate-200 bg-white text-slate-600');
             filter.status = this.dataset.status;
             loadData();
         });

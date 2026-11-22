@@ -1,6 +1,6 @@
 {{-- PWA: manifest, ikon, service worker (public/sw.js, scope /) --}}
 <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
-<meta name="theme-color" content="#B91C1C">
+<meta name="theme-color" content="#0F4C81">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="{{ config('app.name') }}">

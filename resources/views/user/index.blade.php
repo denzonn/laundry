@@ -68,7 +68,7 @@
 
     {{-- FAB mobile --}}
     <button type="button" onclick="formUser()"
-        class="md:hidden fixed bottom-20 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-violet-600 text-white shadow-lg shadow-violet-600/30">
+        class="md:hidden fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-violet-600 text-white shadow-lg shadow-violet-600/30">
         <i class="fa-solid fa-user-plus text-lg"></i>
     </button>
 

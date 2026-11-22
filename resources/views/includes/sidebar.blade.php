@@ -32,60 +32,82 @@
             ['user', 'User', 'fa-user-gear', $o],
         ],
     ];
-    $role = auth()->user()->role;
+    $user = auth()->user();
     $toko = \App\Models\Pengaturan::toko();
 @endphp
 
-<div class="flex flex-col h-full">
+<div class="relative flex h-full flex-col overflow-hidden">
+    {{-- aksen gelembung sabun --}}
+    <div class="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-sky-400/15 blur-3xl"></div>
+    <div class="pointer-events-none absolute -left-10 bottom-24 h-40 w-40 rounded-full bg-sky-400/10 blur-3xl"></div>
 
     {{-- LOGO --}}
-    <div class="h-[72px] flex items-center px-6 border-b border-slate-200">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center">
-                <img src="{{ $toko->logo ? asset('storage/' . $toko->logo) : asset('icons/icon-192.png') }}" class="max-h-10 rounded-lg" alt="">
-            </div>
-            <div>
-                <h2 class="font-semibold text-slate-800">{{ $toko->nama_toko }}</h2>
-                <p class="text-xs text-slate-400">Laundry Management</p>
-            </div>
+    <div class="relative flex h-16 shrink-0 items-center gap-3 border-b border-white/10 px-5 lg:h-[72px]">
+        <img src="{{ $toko->logo ? asset('storage/' . $toko->logo) : asset('icons/icon-192.png') }}" class="h-10 w-10 rounded-xl bg-white object-contain p-0.5" alt="">
+        <div class="min-w-0 flex-1">
+            <h2 class="truncate font-semibold leading-tight">{{ $toko->nama_toko }}</h2>
+            <p class="text-xs text-sky-200/70">Laundry Management</p>
         </div>
+        <button type="button" data-close-sidebar aria-label="Tutup menu"
+            class="flex h-11 w-11 items-center justify-center rounded-xl text-white/70 hover:bg-white/10 lg:hidden">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
     </div>
 
     {{-- MENU --}}
-    <div class="flex-1 overflow-y-auto px-4 py-6 space-y-8">
+    <nav class="relative flex-1 space-y-6 overflow-y-auto px-3 py-5 [scrollbar-width:thin]">
         @foreach ($menus as $group => $items)
-            @php $items = array_filter($items, fn($m) => Route::has($m[0]) && in_array($role, $m[3] ?? ['owner', 'kasir'], true)); @endphp
+            @php $items = array_filter($items, fn($m) => Route::has($m[0]) && in_array($user->role, $m[3] ?? ['owner', 'kasir'], true)); @endphp
             @continue(!$items)
 
             <div>
                 @if ($group)
-                    <p class="text-xs uppercase tracking-widest text-slate-400 mb-3 px-3">{{ $group }}</p>
+                    <p class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-200/50">{{ $group }}</p>
                 @endif
 
-                <div class="space-y-1">
+                <div class="space-y-0.5">
                     @foreach ($items as [$route, $label, $icon])
+                        @php $aktif = request()->routeIs($route); @endphp
                         <a href="{{ route($route) }}"
-                            class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-                                {{ request()->routeIs($route) ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-slate-100' }}">
-                            <i class="fa-solid {{ $icon }} w-5 text-center"></i>
-                            <span class="font-medium">{{ $label }}</span>
+                            class="group relative flex h-11 items-center gap-3 rounded-xl px-3 text-sm transition
+                                {{ $aktif ? 'bg-white/10 font-semibold text-white' : 'text-sky-100/75 hover:bg-white/5 hover:text-white' }}">
+                            @if ($aktif)
+                                <span class="absolute inset-y-2 left-0 w-1 rounded-r-full bg-sky-300"></span>
+                            @endif
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg {{ $aktif ? 'bg-white text-primary shadow-lg' : 'bg-white/5 group-hover:bg-white/10' }}">
+                                <i class="fa-solid {{ $icon }} text-[13px]"></i>
+                            </span>
+                            {{ $label }}
                         </a>
                     @endforeach
                 </div>
             </div>
         @endforeach
-    </div>
+    </nav>
 
-    {{-- LOGOUT --}}
-    <div class="border-t border-slate-200 p-4">
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button
-                class="w-full rounded-xl py-3 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white transition">
-                <i class="fa-solid fa-right-from-bracket mr-2"></i>
-                Logout
-            </button>
-        </form>
+    {{-- USER + LOGOUT --}}
+    <div class="relative shrink-0 border-t border-white/10 p-3" style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom))">
+        <div class="flex items-center gap-3 rounded-2xl bg-white/5 p-2">
+            <a href="{{ route('profil') }}" class="flex min-w-0 flex-1 items-center gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/15 font-semibold text-white">
+                    @if ($user->foto_url)
+                        <img src="{{ $user->foto_url }}" class="h-full w-full object-cover" alt="">
+                    @else
+                        {{ strtoupper(mb_substr($user->name, 0, 1)) }}
+                    @endif
+                </span>
+                <span class="min-w-0">
+                    <span class="block truncate text-sm font-semibold">{{ $user->name }}</span>
+                    <span class="block text-xs capitalize text-sky-200/60">{{ $user->role }}</span>
+                </span>
+            </a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button aria-label="Logout" title="Logout"
+                    class="flex h-11 w-11 items-center justify-center rounded-xl text-sky-100/70 hover:bg-red-500/20 hover:text-red-200">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </form>
+        </div>
     </div>
-
 </div>

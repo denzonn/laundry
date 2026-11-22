@@ -53,9 +53,11 @@ Helper JS global (di [resources/js/](resources/js/), dipakai, jangan dibuat ulan
 Komponen Blade `<x-input>`, `<x-select>` di [resources/views/components/](resources/views/components/) masih **kosong**, jangan dipakai sebelum diisi.
 CSRF untuk semua `$.ajax` sudah di-set global (`$.ajaxSetup` di `includes/script.blade.php`).
 `App.submitLoading()` aktif global di layout: setiap `submit` form memunculkan loading, jadi form AJAX wajib memanggil `App.loading.hide()` di **awal** `success`/`error` (bukan di `complete`, karena `hide()` = `Swal.close()` yang akan menutup alert error).
+Script `@push('addon-script')` dijalankan layout **setelah** bundle Vite (module) siap (ditahan di `<template id="pageScripts">`), jadi helper global boleh dipanggil langsung di top-level script halaman; tetap script klasik (function global untuk `onclick`). Isi push hanya `<script>` inline, tanpa `src`.
+Modal (`.modal-overlay > .modal-content`) otomatis tampil sebagai **bottom sheet** di HP (CSS di app.css), tidak perlu kelas tambahan.
 Flash session `success|error|warning|info` otomatis jadi toast SweetAlert.
 
-Warna tema di [tailwind.config.js](tailwind.config.js): `primary`, `primary_hover`, `secondary`, `background`. Font `font-poppins`.
+Warna tema di [tailwind.config.js](tailwind.config.js): **satu warna merek saja, ocean navy** `primary` `#0F4C81` (+`primary_hover`, `primary_dark` untuk sidebar/hero; tint pakai `primary/5`, `primary/10`, `sky-*`). `secondary` hanya navy terang `#1E6FB5`; **jangan campur warna aksen lain (mint/hijau) sebagai warna merek**. Di atas panel navy, tombol utama = putih teks `text-primary`. Hijau hanya semantik (lunas/selesai/WhatsApp), merah hanya error/hapus/terlambat/pengeluaran. Font `font-poppins`. Ganti warna → ikut ubah `theme-color` (pwa, manifest, offline.html), ikon `public/icons/`, CSS Select2 di app.css.
 Kelas Tailwind yang dibentuk dinamis di JS → tambahkan ke `safelist`.
 
 ## Aturan UI: Mobile & Tablet First
@@ -84,7 +86,7 @@ Jangan copy-paste satu template CRUD "judul + tombol + tabel" ke semua halaman. 
 - Cetak: layout sudah menyembunyikan sidebar/header/footer/bottom nav saat print; di halaman pakai `print:hidden` untuk tombol dan `hidden print:block` untuk judul cetak.
 - Halaman publik (`/lacak`) tidak memakai `layouts.app`; kode order bisa ditebak, jadi jangan tampilkan no HP/alamat/item, nama pelanggan disamarkan.
 - Hapus master yang dipakai order → FK `restrictOnDelete` → handler di [bootstrap/app.php](bootstrap/app.php) membalas 422 dengan pesan jelas.
-- Bottom nav HP ada di layout; elemen `fixed bottom-*` di halaman harus di atas `bottom-16` di HP/tablet, atau sembunyikan nav dengan `@section('no_bottom_nav', true)`.
+- Bottom nav HP ada di layout; elemen `fixed bottom-*` di halaman harus di atas `bottom-16` di HP/tablet, atau sembunyikan nav dengan `@section('no_bottom_nav', true)`. Bottom nav owner/kasir: Beranda · Order · **Baru** (FAB navy, menonjol ±28px) · Pelanggan · Menu (`data-open-sidebar`). Halaman form panjang dengan bar Simpan fixed → sembunyikan nav (contoh: pengaturan, order baru). Header tinggi `h-16` HP / `lg:h-[72px]` → sticky di halaman pakai `top-16 lg:top-[72px]`.
 - Layout `<main>` memakai `overflow-x-clip` (bukan `hidden`) agar `sticky` di dalam halaman tetap jalan.
 - Upload file lewat AJAX: `ajaxRequest` tidak mendukung `FormData`, pakai `$.ajax({ type: 'POST', data: new FormData(form), processData: false, contentType: false })` langsung; update kirim `_method=PUT` di FormData (PHP tidak mem-parse multipart untuk PUT). Contoh: [pengeluaran/index](resources/views/pengeluaran/index.blade.php).
 - Data kecil (layanan, parfum, metode, bahan) → endpoint `data` tanpa pagination; data besar (pelanggan, order) → `paginate()`.

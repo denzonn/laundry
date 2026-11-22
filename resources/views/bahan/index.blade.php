@@ -36,7 +36,7 @@
 
     {{-- FAB HP --}}
     <button type="button" onclick="formBahan()" aria-label="Tambah bahan"
-        class="fixed bottom-20 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-teal-700 text-white shadow-lg shadow-teal-700/30 md:hidden">
+        class="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-teal-700 text-white shadow-lg shadow-teal-700/30 md:hidden">
         <i class="fa-solid fa-plus text-xl"></i>
     </button>
 

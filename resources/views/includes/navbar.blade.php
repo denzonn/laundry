@@ -2,14 +2,14 @@
 
 <div class="relative">
 
-    <button id="profileButton" class="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-slate-100 transition">
+    <button id="profileButton" class="flex h-11 items-center gap-3 rounded-xl px-1.5 transition hover:bg-slate-100 md:px-2" aria-label="Menu akun">
 
-        <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100">
+        <div class="h-9 w-9 overflow-hidden rounded-full bg-primary/10 ring-2 ring-primary/20">
             @if ($user->foto_url)
                 <img src="{{ $user->foto_url }}" class="w-full h-full object-cover" alt="">
             @else
-                <div class="w-full h-full flex items-center justify-center">
-                    <i class="fa-solid fa-user text-slate-500"></i>
+                <div class="flex h-full w-full items-center justify-center text-sm font-semibold text-primary">
+                    {{ strtoupper(mb_substr($user->name, 0, 1)) }}
                 </div>
             @endif
         </div>
@@ -19,7 +19,7 @@
             <p class="text-xs text-slate-400">{{ ucfirst($user->role ?? '') }}</p>
         </div>
 
-        <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+        <i class="fa-solid fa-chevron-down hidden text-xs text-slate-400 md:inline"></i>
 
     </button>
 

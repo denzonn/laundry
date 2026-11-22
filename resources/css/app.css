@@ -24,8 +24,8 @@
 
 .select2-container--default.select2-container--focus .select2-selection--single,
 .select2-container--default.select2-container--open .select2-selection--single {
-    border-color: #b91c1c !important;
-    box-shadow: 0 0 0 3px rgb(185 28 28 / 0.15) !important;
+    border-color: #0f4c81 !important;
+    box-shadow: 0 0 0 3px rgb(15 76 129 / 0.15) !important;
 }
 
 .select2-container--default
@@ -94,7 +94,7 @@
 .select2-container--default
     .select2-selection--single
     .select2-selection__clear:hover {
-    color: #b91c1c !important;
+    color: #0f4c81 !important;
 }
 
 .select2-container--default
@@ -151,9 +151,9 @@
 .select2-container--default
     .select2-search--dropdown
     .select2-search__field:focus {
-    border-color: #b91c1c !important;
+    border-color: #0f4c81 !important;
 
-    box-shadow: 0 0 0 3px rgb(185 28 28 / 0.12) !important;
+    box-shadow: 0 0 0 3px rgb(15 76 129 / 0.12) !important;
 }
 
 .select2-results__option {
@@ -167,8 +167,8 @@
 
 .select2-container--default
     .select2-results__option--highlighted.select2-results__option--selectable {
-    background: #fef2f2 !important;
-    color: #b91c1c !important;
+    background: #eef5fb !important;
+    color: #0f4c81 !important;
 }
 
 .select2-container--default .select2-results__option--selected {
@@ -176,4 +176,55 @@
     color: #0f172a !important;
 
     font-weight: 500;
+}
+
+/* ===== Sentuhan mobile ===== */
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    a,
+    button,
+    label,
+    [role="button"] {
+        touch-action: manipulation;
+    }
+}
+
+/* Modal → bottom sheet di HP (< md). Kelas animasi dari showModal/closeModal tetap dipakai. */
+@media (max-width: 767px) {
+    .modal-overlay {
+        padding: 0 !important;
+        align-items: flex-end !important;
+    }
+
+    .modal-overlay > .modal-content {
+        max-width: 100% !important;
+        max-height: 92dvh;
+        margin-top: 0 !important;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border-radius: 1.5rem 1.5rem 0 0 !important;
+        padding-bottom: env(safe-area-inset-bottom);
+        transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1) !important;
+    }
+
+    .modal-overlay > .modal-content::before {
+        content: "";
+        display: block;
+        width: 40px;
+        height: 4px;
+        margin: 8px auto 0;
+        border-radius: 9999px;
+        background: #cbd5e1;
+    }
+
+    .modal-overlay > .modal-content.scale-95 {
+        transform: translateY(100%) !important;
+    }
+
+    .modal-overlay > .modal-content.scale-100 {
+        transform: none !important;
+    }
 }
